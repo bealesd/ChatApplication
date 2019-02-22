@@ -1,0 +1,60 @@
+﻿@{
+    var chatMessages = MessageStore.GetMessages();
+}
+
+<div id="printUsername">
+    @if (!string.IsNullOrEmpty(@MessageStore.Username))
+    {
+        <h3>Hello @MessageStore.Username</h3>
+    }
+    else
+    {
+        <h3>Hello </h3>
+    }
+
+</div>
+
+<div id="usernameSetup">
+    <select id="selectUsername">
+        <option value="Default">Default</option>
+        <option value="David">David</option>
+        <option value="Esther">Esther</option>
+    </select>
+    <a id="setUsername">Set Username</a>
+</div>
+
+<div id="chatMessages">
+    @foreach (var chatMessage in chatMessages)
+    {
+        if (chatMessage.Who == "David")
+        {
+            <p class="davidMessage">@chatMessage.Content</p>
+        }
+        else if (chatMessage.Who == "Esther")
+        {
+            <p class="estherMessage">@chatMessage.Content</p>
+        }
+        else
+        {
+            <p class="defaultMessage">@chatMessage.Content</p>
+        }
+    }
+</div>
+
+<div id="sendChatForm">
+    <input id="chatMessage" type="text" maxlength="100" />
+    <a id="sendChat">send</a>
+</div>
+
+<script>
+    $("#sendChat").on("click", function () {
+        var message = document.getElementById("chatMessage").value;
+        this.chatHelper.validateChatMessage(message);
+    }.bind(this))
+
+    $("#setUsername").on("click", function () {
+        var username = document.getElementById("selectUsername").value;
+        window.location.href = `/Chat/SetUsername?username=${username}`;
+    }.bind(this))
+
+</script>

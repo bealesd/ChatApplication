@@ -1,0 +1,32 @@
+﻿body {
+    background-color: black;
+    /*color: white;*/
+}
+
+h3 {
+    color: white;
+}
+
+input {
+    color: black;
+}
+
+select {
+    color: black;
+}
+
+.estherMessage {
+    color: deeppink;
+}
+
+.davidMessage {
+    color: deepskyblue;
+}
+
+.defaultMessage {
+    color: white;
+}
+
+.footer {
+    color: white;
+}
