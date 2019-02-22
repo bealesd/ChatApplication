@@ -1,5 +1,6 @@
 ﻿using ChatApplication.Models;
 using System.Collections.Generic;
+using System;
 
 namespace ChatApplication.Repo
 {
@@ -8,11 +9,12 @@ namespace ChatApplication.Repo
         private static List<Message> Messages = new List<Message>();
         public static string Username { get; internal set; } = "David";
 
-        public static void AddMessage(string message) {
+        public static void AddMessage(string message, DateTime dateTime) {
             Messages.Add(new Message()
             {
                 Content = message,
-                Who = Username
+                Who = Username,
+                Datetime = dateTime
             });
         }
 

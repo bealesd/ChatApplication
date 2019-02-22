@@ -12,25 +12,6 @@ input {
     color: black;
 }
 
-/*#printUsername {
-    display: inline-block;
-    margin: 10px;
-    padding: 10px;
-    border: 2px solid red;
-    border-radius: 5px;
-}*/
-
-/*#printUsername > a {
-        display: block;
-        padding-bottom: 5px;
-        font-size: 20px;
-    }
-
-    #printUsername > select {
-        font-size: 18px;
-        color: black;
-    }*/
-
 #usernameContainer > h2 > #setUsername {
     color: black;
 }
@@ -41,41 +22,87 @@ input {
     padding: 10px;
     border: 2px solid red;
     border-radius: 5px;
-    width: auto;
+    width: 300px;
+    height: 500px;
+    overflow-y: auto;
 }
+
+    #messagesContainer::-webkit-scrollbar {
+        display: none;
+    }
+
+    #messagesContainer > div > p {
+        word-wrap: break-word;
+        max-width: 280px;
+    }
 
 #sendChatForm {
-    overflow: hidden;
-    position: fixed;
+    /*overflow: hidden;*/
+    /*position: fixed;*/
     width: auto;
-    bottom: 10px;
-    border: 3px solid #8AC007;
-    /*display: inline-block;*/
-    margin: 15px;
-    padding: 10px;
-    /*border: 2px solid red;*/
-    border-radius: 5px;
+    /*border: 2px solid #8AC007;
+    border-radius: 5px;*/
+    /*margin-bottom: 50px;*/
+    /*margin-left: 50px;
+    padding: 10px;*/
+    /*background: rgba(0,0,0, 0.8);*/
 }
 
-    #sendChatForm > input {
-        display: block;
-        padding-bottom: 5px;
+    #sendChatForm > textarea {
+        display: inline;
         font-size: 14px;
         width: 160px;
+        border-radius: 10px;
+        padding-left: 5px;
+        margin-left: 70px;
+        overflow: hidden;
+        resize: none;
+        outline: none;
     }
 
     #sendChatForm > a {
-        display: block;
-        padding-bottom: 5px;
-        font-size: 20px;
+        display: inline;
+        font-size: 15px;
     }
 
-.estherMessage {
-    color: deeppink;
+.esther {
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 2px solid purple;
+    border-radius: 10px;
+    margin-bottom: 5px;
 }
 
-.davidMessage {
-    color: deepskyblue;
+    .esther > .estherMessage {
+        margin-top: 0px;
+        color: deeppink;
+        text-align: right;
+    }
+
+    .esther > .dateTime {
+        text-align: right;
+    }
+
+.david {
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 2px solid blue;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+    .david > .davidMessage {
+        margin-top: 0px;
+        text-align: left;
+        color: deepskyblue;
+    }
+
+.dateTime {
+    padding-top: 1px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 8px;
+    color: white;
 }
 
 .footer {

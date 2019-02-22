@@ -25,26 +25,41 @@
     {
         if (chatMessage.Who == "David")
         {
-            <p class="davidMessage">@chatMessage.Content</p>
+            <div class="david">
+                <p class="dateTime">@chatMessage.Datetime</p>
+                <p class="davidMessage">@chatMessage.Content</p>
+            </div>
         }
         else if (chatMessage.Who == "Esther")
         {
-            <p class="estherMessage">@chatMessage.Content</p>
+            <div class="esther">
+                <p class="dateTime">@chatMessage.Datetime</p>
+                <p class="estherMessage">@chatMessage.Content</p>
+            </div>
+
         }
     }
 
 </div>
 
 <div id="sendChatForm">
-    <input id="chatMessage" type="text" maxlength="50" />
-    <a id="sendChat">send</a>
+    <textarea rows="1" style="height:2em;" id="chatMessage" maxlength="250" placeholder="type a message"></textarea>
 </div>
 
 <script>
-    $("#sendChat").on("click", function () {
-        var message = document.getElementById("chatMessage").value;
-        this.chatHelper.validateChatMessage(message);
+    $(document).ready(function () {
+        this.chatHelper.scrollToBottom("messagesContainer")
+    }.bind(this));
+
+    $("#chatMessage").on("keydown", function () {
+        this.chatHelper.updateMessageBox('chatMessage');
     }.bind(this))
+    
+    $("#chatMessage").on("keyup", function (event) {
+        if (event.keyCode === 13) {
+            this.chatHelper.validateAndSendChatMessage("chatMessage");
+        }
+    }.bind(this));
 
     $("#setUsername").change(function () {
         var username = document.getElementById("setUsername").value;

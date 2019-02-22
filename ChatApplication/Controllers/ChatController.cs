@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System;
 using Microsoft.AspNetCore.Mvc;
 using ChatApplication.Repo;
 
@@ -14,7 +15,7 @@ namespace ChatApplication.Controllers
 
         public async Task<IActionResult> SendChatMessage(string chatMessage, string who)
         {
-            MessageStore.AddMessage(chatMessage);
+            MessageStore.AddMessage(chatMessage, DateTime.Now);
             return RedirectToAction("LoadChatView");
         }
 
