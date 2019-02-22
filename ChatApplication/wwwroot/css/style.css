@@ -3,16 +3,44 @@
     /*color: white;*/
 }
 
-h3 {
+h2 {
     color: white;
+    margin: 10px;
 }
 
 input {
     color: black;
 }
 
-select {
+/*#printUsername {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid red;
+    border-radius: 5px;
+}*/
+
+/*#printUsername > a {
+        display: block;
+        padding-bottom: 5px;
+        font-size: 20px;
+    }
+
+    #printUsername > select {
+        font-size: 18px;
+        color: black;
+    }*/
+
+#printUsername > h2 > #setUsername {
     color: black;
+}
+
+#messagesContainer {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid red;
+    border-radius: 5px;
 }
 
 .estherMessage {
@@ -21,10 +49,6 @@ select {
 
 .davidMessage {
     color: deepskyblue;
-}
-
-.defaultMessage {
-    color: white;
 }
 
 .footer {

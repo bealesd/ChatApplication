@@ -6,7 +6,7 @@ namespace ChatApplication.Repo
     public static class MessageStore
     {
         private static List<Message> Messages = new List<Message>();
-        public static string Username { get; internal set; }
+        public static string Username { get; internal set; } = "David";
 
         public static void AddMessage(string message) {
             Messages.Add(new Message()
