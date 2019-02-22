@@ -1,32 +1,26 @@
 ﻿@{
     var chatMessages = MessageStore.GetMessages();
-
-    var username = "Chatting as";
-    @if (!string.IsNullOrEmpty(MessageStore.Username))
-    {
-        username = $"Chatting as {MessageStore.Username}";
-    }
 }
 
-<div id="printUsername">
+<div id="usernameContainer">
     <h2>
         Chatting as
         <select id="setUsername">
-            <option value="David">David</option>
-            <option value="Esther">Esther</option>
+            @if (MessageStore.Username == "David")
+            {
+                <option selected value="David">David</option>
+                <option value="Esther">Esther</option>
+            }
+            else if (MessageStore.Username == "Esther")
+            {
+                <option value="David">David</option>
+                <option selected value="Esther">Esther</option>
+            }
         </select>
     </h2>
 </div>
 
-@*<div id="usernameSetup">
-    <a id="setUsername">I am</a>
-    <select id="selectUsername">
-        <option value="David">David</option>
-        <option value="Esther">Esther</option>
-    </select>
-</div>*@
-
-<div id="chatMessages">
+<div id="messagesContainer">
     @foreach (var chatMessage in chatMessages)
     {
         if (chatMessage.Who == "David")
@@ -38,10 +32,11 @@
             <p class="estherMessage">@chatMessage.Content</p>
         }
     }
+
 </div>
 
 <div id="sendChatForm">
-    <input id="chatMessage" type="text" maxlength="100" />
+    <input id="chatMessage" type="text" maxlength="50" />
     <a id="sendChat">send</a>
 </div>
 
@@ -51,7 +46,7 @@
         this.chatHelper.validateChatMessage(message);
     }.bind(this))
 
-    $("#setUsername").on("change", function () {
+    $("#setUsername").change(function () {
         var username = document.getElementById("setUsername").value;
         window.location.href = `/Chat/SetUsername?username=${username}`;
     }.bind(this))

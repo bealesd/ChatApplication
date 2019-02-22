@@ -31,7 +31,7 @@ input {
         color: black;
     }*/
 
-#printUsername > h2 > #setUsername {
+#usernameContainer > h2 > #setUsername {
     color: black;
 }
 
@@ -41,7 +41,34 @@ input {
     padding: 10px;
     border: 2px solid red;
     border-radius: 5px;
+    width: auto;
 }
+
+#sendChatForm {
+    overflow: hidden;
+    position: fixed;
+    width: auto;
+    bottom: 10px;
+    border: 3px solid #8AC007;
+    /*display: inline-block;*/
+    margin: 15px;
+    padding: 10px;
+    /*border: 2px solid red;*/
+    border-radius: 5px;
+}
+
+    #sendChatForm > input {
+        display: block;
+        padding-bottom: 5px;
+        font-size: 14px;
+        width: 160px;
+    }
+
+    #sendChatForm > a {
+        display: block;
+        padding-bottom: 5px;
+        font-size: 20px;
+    }
 
 .estherMessage {
     color: deeppink;
@@ -52,5 +79,8 @@ input {
 }
 
 .footer {
+    position: fixed;
+    bottom: 0px;
     color: white;
+    font-size: 10px;
 }
