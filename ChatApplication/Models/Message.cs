@@ -7,5 +7,6 @@ namespace ChatApplication.Models
         public string Who { get; set; }
         public string Content { get; set; }
         public DateTime Datetime { get; set; }
+        public Guid Id { get; set; }
     }
 }

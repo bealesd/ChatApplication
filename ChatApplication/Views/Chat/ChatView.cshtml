@@ -1,5 +1,7 @@
-﻿@{
-    var chatMessages = MessageStore.GetMessages();
+﻿@model List<ChatApplication.Models.Message>
+@{
+    var chatMessages = Model;
+    var lastMessageId = chatMessages.Count > 0 ? chatMessages.Last().Id : Guid.Empty;
 }
 
 <div id="usernameContainer">
@@ -36,7 +38,6 @@
                 <p class="dateTime">@chatMessage.Datetime</p>
                 <p class="estherMessage">@chatMessage.Content</p>
             </div>
-
         }
     }
 
@@ -46,15 +47,47 @@
     <textarea rows="1" style="height:2em;" id="chatMessage" maxlength="250" placeholder="type a message"></textarea>
 </div>
 
+<button onclick="checkForMessages()">check for messages</button>
+
 <script>
     $(document).ready(function () {
         this.chatHelper.scrollToBottom("messagesContainer")
     }.bind(this));
 
+    function getChats() {
+        var getChatsUrl = window.location + "Chat/GetLastChat";
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open('GET', getChatsUrl, true);
+        xhttp.timeout = 30000;
+        xhttp.send();
+        return new Promise(function (res, rej) {
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && (this.status === 200 || this.status === 201))
+                    return res(JSON.parse(this.responseText));
+                if (this.readyState === 4 && (this.status !== 200 || this.status !== 201))
+                    return rej();
+            };
+        }.bind(this));
+    }
+
+    function checkForMessages() {
+        getChats().then(function (results) {
+            if ("@lastMessageId" === results["id"]) {
+                console.log("none found");
+                //write message to screen
+            }
+            else {
+                console.log("message found");
+                window.location.href = window.location.origin + "/Chat/LoadChatView";
+            }
+        });
+    }
+
     $("#chatMessage").on("keydown", function () {
         this.chatHelper.updateMessageBox('chatMessage');
     }.bind(this))
-    
+
     $("#chatMessage").on("keyup", function (event) {
         if (event.keyCode === 13) {
             this.chatHelper.validateAndSendChatMessage("chatMessage");

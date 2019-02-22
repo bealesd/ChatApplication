@@ -37,15 +37,7 @@ input {
     }
 
 #sendChatForm {
-    /*overflow: hidden;*/
-    /*position: fixed;*/
     width: auto;
-    /*border: 2px solid #8AC007;
-    border-radius: 5px;*/
-    /*margin-bottom: 50px;*/
-    /*margin-left: 50px;
-    padding: 10px;*/
-    /*background: rgba(0,0,0, 0.8);*/
 }
 
     #sendChatForm > textarea {
