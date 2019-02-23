@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
-using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using ChatApplication.Models;
 using ChatApplication.Repo;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using ChatApplication.Models;
+using System.Threading.Tasks;
 
 namespace ChatApplication.Controllers
 {
@@ -15,20 +16,53 @@ namespace ChatApplication.Controllers
             return View("ChatView", MessageStore.GetMessages());
         }
 
-        public async Task<IActionResult> GetLastChat()
+        private async Task<Guid> GetLastDatabaseChatId()
         {
-            JsonResult result = Json(new Message());
+            Guid result = Guid.Empty;
             if (MessageStore.GetMessages() != null && MessageStore.GetMessages().Count > 0)
             {
-                result = Json(MessageStore.GetMessages().Last());
+                result = MessageStore.GetMessages().Last().Id;
             }
             return result;
         }
 
+        public async Task<IActionResult> GetLastTenChats()
+        {
+            var mesages = MessageStore.GetMessages().Skip(Math.Max(0, MessageStore.GetMessages().Count() - 10));
+            return Json(mesages);
+        }
+
+        public async Task<IActionResult> GetChatsAfterId(Guid lastClientId)
+        {
+            List<Message> newChats = await GetNewChats(lastClientId);
+            return Json(newChats);
+        }
+
+        private async Task<List<Message>> GetNewChats(Guid lastClientId)
+        {
+            List<Message> allMessages = MessageStore.GetMessages();
+            Message clientMessage = allMessages.FirstOrDefault(m => m.Id == lastClientId);
+            var newMessages = new List<Message>();
+            if (clientMessage != null)
+            {
+                var newMessageIndex = allMessages.IndexOf(allMessages.FirstOrDefault(m => m.Id == lastClientId)) + 1;
+                newMessages = allMessages.GetRange(newMessageIndex, allMessages.Count - newMessageIndex);
+            }
+            else
+            {
+                newMessages = allMessages;
+            }
+
+            return newMessages;
+        }
+
         public async Task<IActionResult> SendChatMessage(string chatMessage, string who)
         {
-            MessageStore.AddMessage(chatMessage, DateTime.Now, Guid.NewGuid());
+            var id = Guid.NewGuid();
+            MessageStore.AddMessage(chatMessage, DateTime.Now.Ticks, id);
             return RedirectToAction("LoadChatView");
+            //var a = Json(id);
+            //return a;
         }
 
         public async Task<IActionResult> SetUsername(string username)

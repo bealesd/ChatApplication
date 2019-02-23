@@ -9,7 +9,7 @@ namespace ChatApplication.Repo
         private static List<Message> Messages = new List<Message>();
         public static string Username { get; internal set; } = "David";
 
-        public static void AddMessage(string message, DateTime dateTime, Guid id) {
+        public static void AddMessage(string message, long dateTime, Guid id) {
             Messages.Add(new Message()
             {
                 Content = message,
