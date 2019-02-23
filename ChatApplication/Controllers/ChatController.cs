@@ -28,7 +28,7 @@ namespace ChatApplication.Controllers
 
         public async Task<IActionResult> GetLastTenChats()
         {
-            var mesages = MessageStore.GetMessages().Skip(Math.Max(0, MessageStore.GetMessages().Count() - 10));
+            IEnumerable<Message> mesages = MessageStore.GetMessages().Skip(Math.Max(0, MessageStore.GetMessages().Count() - 10));
             return Json(mesages);
         }
 
@@ -54,6 +54,20 @@ namespace ChatApplication.Controllers
             }
 
             return newMessages;
+        }
+
+
+        public async Task<IActionResult> GetChatsBeforeId(Guid firstClientId)
+        {
+            List<Message> allMessages = MessageStore.GetMessages();
+            Message clientMessage = allMessages.FirstOrDefault(m => m.Id == firstClientId);
+            var oldMessages = new List<Message>();
+            if (clientMessage != null)
+            {
+                var oldMessageIndex = allMessages.IndexOf(allMessages.FirstOrDefault(m => m.Id == firstClientId));
+                oldMessages = allMessages.GetRange(0, oldMessageIndex);
+            }
+            return Json(oldMessages);
         }
 
         public async Task<IActionResult> SendChatMessage(string chatMessage, string who)

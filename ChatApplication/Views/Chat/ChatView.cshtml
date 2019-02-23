@@ -24,33 +24,43 @@
 <div id="messagesContainer">
 </div>
 
+<div id="messageControls">
+    <a onclick="getPrevious10Messages()"><span class="glyphicon glyphicon-arrow-up"></span></a>
+    <a onclick="getNewMessages()"><span class="glyphicon glyphicon-arrow-down"></span></a>
+</div>
+
 <div id="sendChatForm">
     <textarea rows="1" style="height:2em;" id="chatMessage" maxlength="250" placeholder="type a message"></textarea>
 </div>
 
-<button onclick="getNewMessages()">getNewMessages</button>
+<div id="messageControlsResponse">
+    <p>info</p>
+</div>
 
 <script>
     var lastMessageId = "@Guid.Empty"
     var firstMessageId = "@Guid.Empty"
-    //TODO: Createcontroller for GetPreviousTenChats
     function getPrevious10Messages() {
-        get("Chat/GetPreviousTenChats").then(function (results) {
+        if (document.querySelectorAll("#messagesContainer > div").length === 0) {
+            //no messages have been loaded meaning there are no messages
+            return;
+        }
+        firstMessageId = document.getElementById("messagesContainer").children[0].dataset.id;
+        get(`Chat/GetChatsBeforeId?firstClientId=${firstMessageId}`).then(function (results) {
             if (results.length > 0) {
-                for (var i = 0; i < results.length; i++) {
+                for (var i = results.length -1 ; i >= 0 ; i--) {
                     var messageNode = createMessageNode(results[i]);
                     document.getElementById("messagesContainer").innerHTML = messageNode + document.getElementById("messagesContainer").innerHTML;
                 }
-                firstMessageId = document.getElementById("messagesContainer").children[0].dataset.id;
             }
             else {
-                console.log("no messages");
+                document.querySelectorAll("#messageControlsResponse > p")[0].innerHTML = "no older messages";
             }
         });
     }
 
     function getLast10Messages() {
-        get("Chat/GetLastTenChats").then(function (results) {
+        return get("Chat/GetLastTenChats").then(function (results) {
             if (results.length > 0) {
                 for (var i = 0; i < results.length; i++) {
                     var messageNode = createMessageNode(results[i]);
@@ -59,13 +69,14 @@
                 lastMessageId = results[results.length - 1]['id'];
             }
             else {
-                console.log("no messages");
+                document.querySelectorAll("#messageControlsResponse > p")[0].innerHTML = "no messages";
+
             }
         });
     }
 
     function getNewMessages() {
-        get(`Chat/GetChatsAfterId?lastClientId=${lastMessageId}`).then(function (results) {
+        return get(`Chat/GetChatsAfterId?lastClientId=${lastMessageId}`).then(function (results) {
             if (results.length > 0) {
                 for (var i = 0; i < results.length; i++) {
                     var messageNode = createMessageNode(results[i]);
@@ -74,7 +85,8 @@
                 lastMessageId = results[results.length - 1]['id'];
             }
             else {
-                console.log("no messages");
+                document.querySelectorAll("#messageControlsResponse > p")[0].innerHTML = "no new messages";
+
             }
         });
     }
@@ -88,14 +100,36 @@
                             <p class="dateTime">${messageDateTime.toUTCString()}</p>
                             <p class="${message['who'].toLowerCase()}Message">${message['content']}</p>
                          </div>`
-        console.log(messageNode);
         return messageNode;
     }
 
     $(document).ready(function () {
-        this.chatHelper.scrollToBottom("messagesContainer")
-        getLast10Messages();
+        getLast10Messages().then(function () {
+            this.chatHelper.scrollToBottom("messagesContainer")
+        }.bind(this));
+
+        document.getElementById("messagesContainer").addEventListener('scroll', function () {
+            var curScrollPos = document.getElementById("messagesContainer").scrollTop
+            if (curScrollPos === 0) {
+                console.log("scrolling up to top");
+                getPrevious10Messages();
+            }
+            if (document.getElementById("messagesContainer").scrollTop + document.getElementById("messagesContainer").clientHeight === document.getElementById("messagesContainer").scrollHeight) {
+                getNewMessages();
+            }
+        }.bind(this));
+
+        loop();
+
     }.bind(this));
+
+    function loop() {
+        setTimeout(function () {
+            getNewMessages().then(function () {
+                loop();
+            }.bind(this));
+        }.bind(this), 5000);
+    }
 
     function get(suffix) {
         var getChatsUrl = window.location + suffix;
