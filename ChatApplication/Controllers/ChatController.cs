@@ -10,25 +10,43 @@ namespace ChatApplication.Controllers
 {
     public class ChatController : Controller
     {
+        public IMessageStoreAzure MessageStoreAzure { get; }
+
+        public ChatController(IMessageStoreAzure messageStoreAzure)
+        {
+            MessageStoreAzure = messageStoreAzure;
+        }
         public async Task<IActionResult> LoadChatView()
         {
             @ViewData["Title"] = "Chat";
-            return View("ChatView", MessageStore.GetMessages());
+
+            var messages = await MessageStoreAzure.GetMessages();
+            return View("ChatView", messages);
+            //return View("ChatView", MessageStore.GetMessages());
         }
 
         private async Task<Guid> GetLastDatabaseChatId()
         {
             Guid result = Guid.Empty;
-            if (MessageStore.GetMessages() != null && MessageStore.GetMessages().Count > 0)
+            var messages = await MessageStoreAzure.GetMessages();
+            if (messages != null && messages.Count() > 0)
             {
                 result = MessageStore.GetMessages().Last().Id;
             }
             return result;
+
+            //if (MessageStore.GetMessages() != null && MessageStore.GetMessages().Count > 0)
+            //{
+            //    result = MessageStore.GetMessages().Last().Id;
+            //}
+            //return result;
         }
 
         public async Task<IActionResult> GetLastTenChats()
         {
-            IEnumerable<Message> mesages = MessageStore.GetMessages().Skip(Math.Max(0, MessageStore.GetMessages().Count() - 10));
+            var messages = await MessageStoreAzure.GetMessages();
+            IEnumerable<Message> mesages = messages.Skip(Math.Max(0, messages.Count() - 10));
+            //IEnumerable<Message> mesages = MessageStore.GetMessages().Skip(Math.Max(0, MessageStore.GetMessages().Count() - 10));
             return Json(mesages);
         }
 
@@ -40,7 +58,7 @@ namespace ChatApplication.Controllers
 
         private async Task<List<Message>> GetNewChats(Guid lastClientId)
         {
-            List<Message> allMessages = MessageStore.GetMessages();
+            var allMessages = (await MessageStoreAzure.GetMessages()).ToList();
             Message clientMessage = allMessages.FirstOrDefault(m => m.Id == lastClientId);
             var newMessages = new List<Message>();
             if (clientMessage != null)
@@ -59,7 +77,7 @@ namespace ChatApplication.Controllers
 
         public async Task<IActionResult> GetChatsBeforeId(Guid firstClientId)
         {
-            List<Message> allMessages = MessageStore.GetMessages();
+            List<Message> allMessages = (await MessageStoreAzure.GetMessages()).ToList();
             Message clientMessage = allMessages.FirstOrDefault(m => m.Id == firstClientId);
             var oldMessages = new List<Message>();
             if (clientMessage != null)
@@ -73,7 +91,8 @@ namespace ChatApplication.Controllers
         public async Task<IActionResult> SendChatMessage(string chatMessage, string who)
         {
             var id = Guid.NewGuid();
-            MessageStore.AddMessage(chatMessage, DateTime.Now.Ticks, id);
+            //MessageStore.AddMessage(chatMessage, DateTime.Now.Ticks, id);
+            await MessageStoreAzure.AddMessage(chatMessage, DateTime.Now.Ticks, id, who);
             return RedirectToAction("LoadChatView");
             //var a = Json(id);
             //return a;

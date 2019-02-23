@@ -10,7 +10,8 @@
                     alert("no message enterred");
                 }
                 else {
-                    window.location.href = window.location.origin + `/Chat/SendChatMessage?chatMessage=${chatMessage}`;
+                    var username = document.getElementById("setUsername").value;
+                    window.location.href = window.location.origin + `/Chat/SendChatMessage?chatMessage=${chatMessage}&who=${username}`;
                 }
             },
 
