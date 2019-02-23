@@ -32,6 +32,22 @@
 
 <script>
     var lastMessageId = "@Guid.Empty"
+    var firstMessageId = "@Guid.Empty"
+    //TODO: Createcontroller for GetPreviousTenChats
+    function getPrevious10Messages() {
+        get("Chat/GetPreviousTenChats").then(function (results) {
+            if (results.length > 0) {
+                for (var i = 0; i < results.length; i++) {
+                    var messageNode = createMessageNode(results[i]);
+                    document.getElementById("messagesContainer").innerHTML = messageNode + document.getElementById("messagesContainer").innerHTML;
+                }
+                firstMessageId = document.getElementById("messagesContainer").children[0].dataset.id;
+            }
+            else {
+                console.log("no messages");
+            }
+        });
+    }
 
     function getLast10Messages() {
         get("Chat/GetLastTenChats").then(function (results) {
@@ -68,7 +84,7 @@
         var jsTicksFrom1900To1970 = Math.abs(new Date(0, 0, 1).setFullYear(1));
         var messageDateTime = new Date(cSharpTicksFrom1900 - jsTicksFrom1900To1970);
 
-        var messageNode = `<div class="${message['who'].toLowerCase()}">
+        var messageNode = `<div data-id=${message['id']} class="${message['who'].toLowerCase()}">
                             <p class="dateTime">${messageDateTime.toUTCString()}</p>
                             <p class="${message['who'].toLowerCase()}Message">${message['content']}</p>
                          </div>`
