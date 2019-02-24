@@ -1,18 +1,19 @@
 ﻿@model List<ChatApplication.Models.Message>
 @{
     var chatMessages = Model;
+    string who = (string)@ViewData["Who"];
 }
 
 <div id="usernameContainer">
     <h2>
         Chatting as
         <select id="setUsername">
-            @if (MessageStore.Username == "David")
+            @if (who == "David")
             {
                 <option selected value="David">David</option>
                 <option value="Esther">Esther</option>
             }
-            else if (MessageStore.Username == "Esther")
+            else if (who == "Esther")
             {
                 <option value="David">David</option>
                 <option selected value="Esther">Esther</option>
@@ -83,6 +84,7 @@
                     document.getElementById("messagesContainer").innerHTML += messageNode;
                 }
                 lastMessageId = results[results.length - 1]['id'];
+                this.chatHelper.scrollToBottom("messagesContainer");
             }
             else {
                 document.querySelectorAll("#messageControlsResponse > p")[0].innerHTML = "no new messages";
@@ -132,7 +134,7 @@
     }
 
     function get(suffix) {
-        var getChatsUrl = window.location + suffix;
+        var getChatsUrl = window.location.origin + '/' + suffix;
         var xhttp = new XMLHttpRequest();
         xhttp.open('GET', getChatsUrl, true);
         xhttp.timeout = 30000;
@@ -156,10 +158,4 @@
             this.chatHelper.validateAndSendChatMessage("chatMessage");
         }
     }.bind(this));
-
-    //$("#setUsername").change(function () {
-    //    var username = document.getElementById("setUsername").value;
-    //    window.location.href = `/Chat/SetUsername?username=${username}`;
-    //}.bind(this))
-
 </script>

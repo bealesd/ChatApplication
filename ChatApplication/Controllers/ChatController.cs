@@ -16,13 +16,16 @@ namespace ChatApplication.Controllers
         {
             MessageStoreAzure = messageStoreAzure;
         }
-        public async Task<IActionResult> LoadChatView()
+        public async Task<IActionResult> LoadChatView(string who)
         {
+            if (string.IsNullOrEmpty(who))
+            {
+                who = "David";
+            }
             @ViewData["Title"] = "Chat";
-
             var messages = await MessageStoreAzure.GetMessages();
+            @ViewData["Who"] = who;
             return View("ChatView", messages);
-            //return View("ChatView", MessageStore.GetMessages());
         }
 
         private async Task<Guid> GetLastDatabaseChatId()
@@ -34,19 +37,12 @@ namespace ChatApplication.Controllers
                 result = MessageStore.GetMessages().Last().Id;
             }
             return result;
-
-            //if (MessageStore.GetMessages() != null && MessageStore.GetMessages().Count > 0)
-            //{
-            //    result = MessageStore.GetMessages().Last().Id;
-            //}
-            //return result;
         }
 
         public async Task<IActionResult> GetLastTenChats()
         {
             var messages = await MessageStoreAzure.GetMessages();
             IEnumerable<Message> mesages = messages.Skip(Math.Max(0, messages.Count() - 10));
-            //IEnumerable<Message> mesages = MessageStore.GetMessages().Skip(Math.Max(0, MessageStore.GetMessages().Count() - 10));
             return Json(mesages);
         }
 
@@ -91,19 +87,8 @@ namespace ChatApplication.Controllers
         public async Task<IActionResult> SendChatMessage(string chatMessage, string who)
         {
             var id = Guid.NewGuid();
-            //MessageStore.AddMessage(chatMessage, DateTime.Now.Ticks, id);
             await MessageStoreAzure.AddMessage(chatMessage, DateTime.Now.Ticks, id, who);
-            return RedirectToAction("LoadChatView");
-            //var a = Json(id);
-            //return a;
-        }
-
-        public async Task<IActionResult> SetUsername(string username)
-        {
-            MessageStore.Username = username;
-            return RedirectToAction("LoadChatView");
+            return RedirectToAction("LoadChatView", new { who = who });
         }
     }
-
-
 }
