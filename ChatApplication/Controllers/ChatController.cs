@@ -42,8 +42,8 @@ namespace ChatApplication.Controllers
         public async Task<IActionResult> GetLastTenChats()
         {
             var messages = await MessageStoreAzure.GetMessages();
-            IEnumerable<Message> mesages = messages.Skip(Math.Max(0, messages.Count() - 10));
-            return Json(mesages);
+            IEnumerable<Message> lastTenMessages = messages.Skip(Math.Max(0, messages.Count() - 10));
+            return Json(lastTenMessages);
         }
 
         public async Task<IActionResult> GetChatsAfterId(Guid lastClientId)
@@ -66,20 +66,20 @@ namespace ChatApplication.Controllers
             {
                 newMessages = allMessages;
             }
-
             return newMessages;
         }
 
 
-        public async Task<IActionResult> GetChatsBeforeId(Guid firstClientId)
+        public async Task<IActionResult> GetTenChatsBeforeId(Guid firstClientId)
         {
-            List<Message> allMessages = (await MessageStoreAzure.GetMessages()).ToList();
+            var allMessages = (await MessageStoreAzure.GetMessages()).ToList();
             Message clientMessage = allMessages.FirstOrDefault(m => m.Id == firstClientId);
             var oldMessages = new List<Message>();
             if (clientMessage != null)
             {
                 var oldMessageIndex = allMessages.IndexOf(allMessages.FirstOrDefault(m => m.Id == firstClientId));
-                oldMessages = allMessages.GetRange(0, oldMessageIndex);
+                var startIndex = oldMessageIndex > 10 ? oldMessageIndex - 10 : 0;
+                oldMessages = allMessages.GetRange(startIndex, 10);
             }
             return Json(oldMessages);
         }
