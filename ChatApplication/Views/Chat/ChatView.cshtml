@@ -5,7 +5,7 @@
 }
 
 <div id="usernameContainer">
-    <h2>
+    <h4>
         Chatting as
         <select id="setUsername">
             @if (who == "David")
@@ -19,15 +19,15 @@
                 <option selected value="Esther">Esther</option>
             }
         </select>
-    </h2>
+    </h4>
 </div>
 
 <div id="messagesContainer">
 </div>
 
 <div id="messageControls">
-    <a onclick="getPrevious10Messages()"><span class="glyphicon glyphicon-arrow-up"></span></a>
-    <a onclick="getNewMessages()"><span class="glyphicon glyphicon-arrow-down"></span></a>
+    <a id="previous10MessagesButton"><span class="glyphicon glyphicon-arrow-up"></span></a>
+    <a id="newMessagesButton"><span class="glyphicon glyphicon-arrow-down"></span></a>
 </div>
 
 <div id="sendChatForm">
@@ -39,107 +39,8 @@
 </div>
 
 <script>
-    var lastMessageId = "@Guid.Empty"
-    var firstMessageId = "@Guid.Empty"
-    function getPrevious10Messages() {
-        if (document.querySelectorAll("#messagesContainer > div").length === 0) {
-            //no messages have been loaded meaning there are no messages
-            return;
-        }
-        firstMessageId = document.getElementById("messagesContainer").children[0].dataset.id;
-        this.restHelper.get(`Chat/GetTenChatsBeforeId?firstClientId=${firstMessageId}`).then(function (results) {
-            if (results.length > 0) {
-                for (var i = results.length -1 ; i >= 0 ; i--) {
-                    var messageNode = createMessageNode(results[i]);
-                    document.getElementById("messagesContainer").innerHTML = messageNode + document.getElementById("messagesContainer").innerHTML;
-                }
-            }
-            else {
-                document.querySelectorAll("#messageControlsResponse > p")[0].innerHTML = "no older messages";
-            }
-        });
-    }
-
-    function getLast10Messages() {
-        return this.restHelper.get("Chat/GetLastTenChats").then(function (results) {
-            if (results.length > 0) {
-                for (var i = 0; i < results.length; i++) {
-                    var messageNode = createMessageNode(results[i]);
-                    document.getElementById("messagesContainer").innerHTML += messageNode;
-                }
-                lastMessageId = results[results.length - 1]['id'];
-            }
-            else {
-                document.querySelectorAll("#messageControlsResponse > p")[0].innerHTML = "no messages";
-
-            }
-        });
-    }
-
-    function getNewMessages() {
-        return this.restHelper.get(`Chat/GetChatsAfterId?lastClientId=${lastMessageId}`).then(function (results) {
-            if (results.length > 0) {
-                for (var i = 0; i < results.length; i++) {
-                    var messageNode = createMessageNode(results[i]);
-                    document.getElementById("messagesContainer").innerHTML += messageNode;
-                }
-                lastMessageId = results[results.length - 1]['id'];
-                this.chatHelper.scrollToBottom("messagesContainer");
-            }
-            else {
-                document.querySelectorAll("#messageControlsResponse > p")[0].innerHTML = "no new messages";
-
-            }
-        });
-    }
-
-    function createMessageNode(message) {
-        var cSharpTicksFrom1900 = message['datetime'] / 10000;
-        var jsTicksFrom1900To1970 = Math.abs(new Date(0, 0, 1).setFullYear(1));
-        var messageDateTime = new Date(cSharpTicksFrom1900 - jsTicksFrom1900To1970);
-
-        var messageNode = `<div data-id=${message['id']} class="${message['who'].toLowerCase()}">
-                            <p class="dateTime">${messageDateTime.toUTCString()}</p>
-                            <p class="${message['who'].toLowerCase()}Message">${message['content']}</p>
-                         </div>`
-        return messageNode;
-    }
-
     $(document).ready(function () {
-        getLast10Messages().then(function () {
-            this.chatHelper.scrollToBottom("messagesContainer")
-        }.bind(this));
-
-        document.getElementById("messagesContainer").addEventListener('scroll', function () {
-            var curScrollPos = document.getElementById("messagesContainer").scrollTop
-            if (curScrollPos === 0) {
-                console.log("scrolling up to top");
-                getPrevious10Messages();
-            }
-            if (document.getElementById("messagesContainer").scrollTop + document.getElementById("messagesContainer").clientHeight === document.getElementById("messagesContainer").scrollHeight) {
-                getNewMessages();
-            }
-        }.bind(this));
-
-        loop();
-
-    }.bind(this));
-
-    function loop() {
-        setTimeout(function () {
-            getNewMessages().then(function () {
-                loop();
-            }.bind(this));
-        }.bind(this), 5000);
-    }
-
-    $("#chatMessage").on("keydown", function () {
-        this.chatHelper.updateMessageBox('chatMessage');
+        this.chat.init("@Guid.Empty", "@Guid.Empty");
+        this.chat.onLoad();
     }.bind(this))
-
-    $("#chatMessage").on("keyup", function (event) {
-        if (event.keyCode === 13) {
-            this.chatHelper.validateAndSendChatMessage("chatMessage");
-        }
-    }.bind(this));
 </script>

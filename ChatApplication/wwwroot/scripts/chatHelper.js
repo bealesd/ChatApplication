@@ -1,9 +1,6 @@
 ﻿function ChatHelper() {
     function main() {
         return {
-            intialize: function () {
-            },
-
             validateAndSendChatMessage: function (id) {
                 var chatMessage = document.getElementById(id).value;
                 if (!chatMessage.trim() || chatMessage.trim() === "" || chatMessage === null || chatMessage === undefined) {
