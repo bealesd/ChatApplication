@@ -28,11 +28,10 @@ namespace ChatApplication
                 chatStoreTableName = Configuration.GetSection("TableConfigTest")["TableName"];
                 chatStoreKey = Configuration.GetSection("TableConfigTest")["Key"];
             }
-
             else
             {
                 chatStoreTableName = Configuration.GetSection("TableConfigLive")["TableName"];
-                chatStoreKey = Configuration.GetSection("TableConfig")["Key"];
+                chatStoreKey = Configuration.GetSection("TableConfigLive")["Key"];
             }
             services.AddSingleton<IMessageStoreAzure>(new MessageStoreAzure(chatStoreKey, chatStoreTableName));
         }
