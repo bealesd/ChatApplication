@@ -74,7 +74,7 @@
                     if (event.keyCode === 13) {
                         this.chatHelper.validateAndSendChatMessage("chatMessage");
                     }
-                    document.getElementById(event).focus();
+                    document.getElementById("chatMessage").focus();
                 }.bind(this));
             }
         };
