@@ -10,25 +10,36 @@ namespace ChatApplication
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment HostingEnvironment { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             Configuration = configuration;
+            HostingEnvironment = hostingEnvironment;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            var chatStoreKey = Configuration.GetSection("TableConfig")["Key"];
-            services.AddSingleton<IMessageStoreAzure>(new MessageStoreAzure(chatStoreKey));
+            var chatStoreKey = "";
+            var chatStoreTableName = "";
+            if (HostingEnvironment.IsDevelopment())
+            {
+                chatStoreTableName = Configuration.GetSection("TableConfigTest")["TableName"];
+                chatStoreKey = Configuration.GetSection("TableConfigTest")["Key"];
+            }
+
+            else
+            {
+                chatStoreTableName = Configuration.GetSection("TableConfigLive")["TableName"];
+                chatStoreKey = Configuration.GetSection("TableConfig")["Key"];
+            }
+            services.AddSingleton<IMessageStoreAzure>(new MessageStoreAzure(chatStoreKey, chatStoreTableName));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+
 
             app.UseHsts();
             app.UseHttpsRedirection();
