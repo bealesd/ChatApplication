@@ -1,14 +1,14 @@
 ﻿body {
-    background-color: black;
+    background-color: white;
 }
 
 h4 {
-    color: white;
+    color: gray;
     margin: 10px;
 }
 
 input {
-    color: black;
+    color: gray;
 }
 
 #usernameContainer > h4 > #setUsername {
@@ -51,7 +51,7 @@ input {
 
     #messageControlsResponse > p {
         padding-top:5px;
-        color: white;
+        color: gray;
         text-align: center;
         width: 200px;
     }
@@ -106,7 +106,7 @@ input {
     .david > .davidMessage {
         margin-top: 0px;
         text-align: left;
-        color: deepskyblue;
+        color: blue;
     }
 
 .dateTime {
@@ -114,12 +114,12 @@ input {
     margin-top: 0px;
     margin-bottom: 0px;
     font-size: 8px;
-    color: white;
+    color: gray;
 }
 
 .footer {
     position: fixed;
     bottom: 0px;
-    color: white;
+    color: gray;
     font-size: 10px;
 }

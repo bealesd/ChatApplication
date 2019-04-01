@@ -1,16 +1,17 @@
 ﻿function Chat() {
     this.lastMessageId = null;
     this.firstMessageId = null;
-    //make it focus on chat box onload or enter
+
     function main() {
         return {
             init: function (firstMessageId, lastMessageId) {
-                this.lastMessageId = lastMessageId;
                 this.firstMessageId = firstMessageId;
+                this.lastMessageId = lastMessageId;
                 this.messageRepo = MessageRepo();
                 this.messageRepo.init();
                 this.chatHelper = ChatHelper();
                 this.restHelper = RestHelper();
+                this.setTheme(document.getElementById("setUsername").value);
             },
 
             onLoad: function () {
@@ -31,6 +32,23 @@
                 this.registerGetNewMessagesButton();
                 this.createMessageScrollEvents();
                 this.setupChatInputBox();
+                this.setThemeForUsername();
+            },
+
+            setThemeForUsername: function () {
+                document.getElementById("setUsername").addEventListener("click", function (event) {
+                    let username = event.srcElement.value;
+                    this.setTheme(username);
+                }.bind(this), false);
+            },
+
+            setTheme: function (username) {
+                if (username === "David") {
+                    document.getElementsByTagName('body')[0].style.backgroundColor = 'black';
+                }
+                else {
+                    document.getElementsByTagName('body')[0].style.backgroundColor = "white";
+                }
             },
 
             startNewMessagesWorker: function (interval) {
