@@ -33,8 +33,6 @@ namespace ChatApplication
                 chatStoreTableName = Configuration.GetSection("TableConfigLive")["TableName"];
                 chatStoreKey = Configuration.GetSection("TableConfigLive")["Key"];
             }
-            chatStoreTableName = "chatstore"
-            chatStoreKey = "5iTVqd0HD5GiwSeG4sEL45G9v2p8CcsYl1nVIzrG+WIf0q4xD21GHnwIJ0hxyqe3/45gkwfqkbWOqtcC8sxSiA=="
             services.AddSingleton<IMessageStoreAzure>(new MessageStoreAzure(chatStoreKey, chatStoreTableName));
         }
 
