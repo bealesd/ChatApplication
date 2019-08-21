@@ -21,9 +21,9 @@ namespace ChatApplication.Repo
 
         public MessageStoreAzure(string tableKey, string chatStoreTableName)
         {
-            _storageAccount = CloudStorageAccount.Parse(@"vRHSRbdkkOhg5hSIqJ/HNVFoaX5fRycas+SbvlyWS08A4ZBNst2cmkYvRt7GFmJdCNNqfA3+u39n5Nb/0ngUvQ==");
+            _storageAccount = CloudStorageAccount.Parse(@tableKey);
             CloudTableClient tableClient = _storageAccount.CreateCloudTableClient();
-            _table = tableClient.GetTableReference("chatstore");
+            _table = tableClient.GetTableReference(chatStoreTableName);
             var createTable = Task.Run(() => _table.CreateIfNotExistsAsync());
             createTable.Wait();
         }
