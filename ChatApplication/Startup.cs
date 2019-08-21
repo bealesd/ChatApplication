@@ -30,11 +30,11 @@ namespace ChatApplication
             }
             else
             {
-                 Console.WriteLine("in TableConfigLive");
-                Console.WriteLine(Configuration.GetSection("TableConfigLive"));
                 chatStoreTableName = Configuration.GetSection("TableConfigLive")["TableName"];
                 chatStoreKey = Configuration.GetSection("TableConfigLive")["Key"];
             }
+            chatStoreTableName = "chatstore"
+            chatStoreKey = "vRHSRbdkkOhg5hSIqJ/HNVFoaX5fRycas+SbvlyWS08A4ZBNst2cmkYvRt7GFmJdCNNqfA3+u39n5Nb/0ngUvQ=="
             services.AddSingleton<IMessageStoreAzure>(new MessageStoreAzure(chatStoreKey, chatStoreTableName));
         }
 
