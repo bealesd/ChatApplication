@@ -34,7 +34,7 @@ namespace ChatApplication
                 chatStoreKey = Configuration.GetSection("TableConfigLive")["Key"];
             }
             chatStoreTableName = "chatstore"
-            chatStoreKey = "vRHSRbdkkOhg5hSIqJ/HNVFoaX5fRycas+SbvlyWS08A4ZBNst2cmkYvRt7GFmJdCNNqfA3+u39n5Nb/0ngUvQ=="
+            chatStoreKey = "DefaultEndpointsProtocol=https;AccountName=chatstore;AccountKey=vRHSRbdkkOhg5hSIqJ/HNVFoaX5fRycas+SbvlyWS08A4ZBNst2cmkYvRt7GFmJdCNNqfA3+u39n5Nb/0ngUvQ==;EndpointSuffix=core.windows.net"
             services.AddSingleton<IMessageStoreAzure>(new MessageStoreAzure(chatStoreKey, chatStoreTableName));
         }
 
