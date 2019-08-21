@@ -52,11 +52,15 @@
             },
 
             startNewMessagesWorker: function (interval) {
-                setTimeout(function () {
-                    this.messageRepo.getNewMessages().then(function () {
-                        this.startNewMessagesWorker();
-                    }.bind(this));
+                var intervalID = window.setInterval(function(){
+                    this.messageRepo.getNewMessages();
                 }.bind(this), interval);
+                
+               // setTimeout(function () {
+                //    this.messageRepo.getNewMessages().then(function () {
+                //        this.startNewMessagesWorker();
+                //    }.bind(this));
+               // }.bind(this), interval);
             },
 
             createMessageScrollEvents: function () {
