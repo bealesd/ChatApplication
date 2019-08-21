@@ -30,6 +30,8 @@ namespace ChatApplication
             }
             else
             {
+                 Console.WriteLine("in TableConfigLive");
+                Console.WriteLine(Configuration.GetSection("TableConfigLive"));
                 chatStoreTableName = Configuration.GetSection("TableConfigLive")["TableName"];
                 chatStoreKey = Configuration.GetSection("TableConfigLive")["Key"];
             }
