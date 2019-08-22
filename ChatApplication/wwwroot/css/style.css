@@ -41,6 +41,15 @@ input {
     margin-bottom: 10px;
 }
 
+#a {
+    display:inline-block;
+    font-size: 25px;
+}
+
+#submitMessageButton > span {
+    top: -1px;
+}
+
 #messageControlsResponse {
     display: inline-block;
     margin-top: 20px;

@@ -30,16 +30,18 @@
             registerChatEvents: function () {
                 this.registerGetPrevious10MessagesButton();
                 this.registerGetNewMessagesButton();
-                this.createMessageScrollEvents();
                 this.setupChatInputBox();
                 this.setThemeForUsername();
+                this.registerTabSwitch();
             },
 
             setThemeForUsername: function () {
-                document.getElementById("setUsername").addEventListener("click", function (event) {
+                document.getElementById("setUsername").addEventListener("change", function (event) {
                     let username = event.srcElement.value;
                     this.setTheme(username);
+                    document.getElementById("chatMessage").focus();
                 }.bind(this), false);
+
             },
 
             setTheme: function (username) {
@@ -52,26 +54,9 @@
             },
 
             startNewMessagesWorker: function (interval) {
-                var intervalID = window.setInterval(function(){
+                var intervalID = window.setInterval(function () {
                     this.messageRepo.getNewMessages();
                 }.bind(this), interval);
-                
-               // setTimeout(function () {
-                //    this.messageRepo.getNewMessages().then(function () {
-                //        this.startNewMessagesWorker();
-                //    }.bind(this));
-               // }.bind(this), interval);
-            },
-
-            createMessageScrollEvents: function () {
-                document.getElementById("messagesContainer").addEventListener('scroll', function () {
-                    var curScrollPos = document.getElementById("messagesContainer").scrollTop;
-                    if (curScrollPos === 0)
-                        this.messageRepo.getPrevious10Messages();
-                    if (document.getElementById("messagesContainer").scrollTop + document.getElementById("messagesContainer").clientHeight === document.getElementById("messagesContainer").scrollHeight) {
-                        this.messageRepo.getNewMessages();
-                    }
-                }.bind(this));
             },
 
             registerGetPrevious10MessagesButton: function () {
@@ -91,13 +76,15 @@
                     this.chatHelper.updateMessageBox('chatMessage');
                 }.bind(this));
 
-                $("#chatMessage").on("keyup", function (event) {
-                    //13 is enter
-                    if (event.keyCode === 13) {
-                        this.chatHelper.validateAndSendChatMessage("chatMessage");
-                    }
-                    document.getElementById("chatMessage").focus();
+                $("#submitMessageButton").on("click", function (event) {
+                    this.chatHelper.validateAndSendChatMessage("chatMessage");
                 }.bind(this));
+            },
+
+            registerTabSwitch: function () {
+                $(window).blur(function () {
+                    localStorage.setItem("newMessagesCount", "0");
+                });
             }
         };
     }
