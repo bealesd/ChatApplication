@@ -17,8 +17,9 @@ input {
 
 #messagesContainer {
     display: inline-block;
-    margin: 10px;
-    padding: 10px;
+    font-size: 14px;
+    margin: 5px;
+    padding: 5px;
     border: 2px solid red;
     border-radius: 5px;
     width: 300px;
@@ -33,6 +34,8 @@ input {
     #messagesContainer > div > p {
         word-wrap: break-word;
         max-width: 280px;
+        padding: 0px;
+        margin: 0px;
     }
 
 #messageControls {
