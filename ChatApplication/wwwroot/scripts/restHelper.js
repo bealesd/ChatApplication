@@ -31,7 +31,7 @@
                 return new Promise(function (res, rej) {
                     xhttp.onreadystatechange = function () {
                         if (this.readyState === 4 && (this.status === 200 || this.status === 201))
-                            return res();
+                            return res(JSON.parse(this.responseText));
                         if (this.readyState === 4 && (this.status !== 200 || this.status !== 201))
                             return rej();
                     };

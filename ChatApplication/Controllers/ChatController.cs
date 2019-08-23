@@ -94,8 +94,13 @@ namespace ChatApplication.Controllers
             }
             var json = Newtonsoft.Json.JsonConvert.DeserializeObject<MessageJson>(bodyStr);
 
-            await MessageStoreAzure.AddMessage(json.Message, DateTime.Now.Ticks, id, json.Username);
-            return StatusCode(200);
+
+            var time = DateTime.Now.Ticks;
+            await MessageStoreAzure.AddMessage(json.Message, time, id, json.Username);
+
+            var allMessages = (await MessageStoreAzure.GetMessages()).ToList();
+            Message clientMessage = allMessages.FirstOrDefault(m => m.Datetime == time);
+            return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(clientMessage));
         }
 
         private async Task<Guid> GetLastDatabaseChatId()

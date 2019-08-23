@@ -9,7 +9,8 @@
                 else {
                     var username = document.getElementById("setUsername").value;
                     if (username === null) return;
-                    new RestHelper().postMessage(chatMessage, username).then(function () {
+                    new RestHelper().postMessage(chatMessage, username).then(function (res) {
+                        console.log(res);
                         new MessageRepo().getNewMessages();
                     }.bind(this));
                 }

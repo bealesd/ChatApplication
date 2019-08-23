@@ -48,8 +48,6 @@
                     }
                     document.querySelectorAll("#messageControlsResponse > p")[0].innerHTML = `new messages: ${localStorage.getItem("newMessagesCount")}`;
 
-                    document.querySelectorAll("#chatMessage")[0].value = "";
-
                 }.bind(this));
             },
 
