@@ -17,7 +17,7 @@
             onLoad: function () {
                 this.loadChats();
                 this.registerChatEvents();
-                this.startNewMessagesWorker(5000);
+                this.startNewMessagesWorker(10000);
                 document.getElementById('chatMessage').focus();
             },
 
