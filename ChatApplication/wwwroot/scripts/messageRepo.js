@@ -37,9 +37,14 @@
             getNewMessages: function () {
                 return RestHelper().get(`Chat/GetChatsAfterId?lastClientId=${lastMessageId}`).then(function (results) {
                     if (results.length > 0) {
+                        let dict = {};
                         for (let i = 0; i < results.length; i++) {
-                            let messageNode = this.createMessageNode(results[i]);
-                            if (messageNode !== null) document.getElementById("messagesContainer").innerHTML += messageNode;
+                            let id = results[i].id;
+                            if (dict[`${id}`] === undefined) {
+                                dict[`${id}`] = "";
+                                let messageNode = this.createMessageNode(results[i]);
+                                if (messageNode !== null) document.getElementById("messagesContainer").innerHTML += messageNode;
+                            }
                         }
                         lastMessageId = results[results.length - 1]['id'];
                         ChatHelper().scrollToBottom("messagesContainer");
@@ -60,12 +65,12 @@
                 let messageDateTime = new Date(cSharpTicksFrom1900 - jsTicksFrom1900To1970);
 
                 let messageNode =
-                    `<div data-id=${message['id']} class="${message['who'].toLowerCase()}">
+                    `<div data-id=${message['id']} class="${message['who'].toLowerCase()} messageNode">
                         <p class="dateTime">${messageDateTime.toUTCString()}</p>
                         <p class="${message['who'].toLowerCase()}Message">${message['content']}</p>
                     </div>`;
                 return messageNode;
-            }
+            },
 
         };
     }

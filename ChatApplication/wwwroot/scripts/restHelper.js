@@ -28,6 +28,7 @@
                     'Username': `${username}`
                 };
                 xhttp.send(JSON.stringify(json));
+                document.querySelectorAll("#chatMessage")[0].value = "";
                 return new Promise(function (res, rej) {
                     xhttp.onreadystatechange = function () {
                         if (this.readyState === 4 && (this.status === 200 || this.status === 201))

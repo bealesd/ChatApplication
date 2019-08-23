@@ -56,7 +56,6 @@
             startNewMessagesWorker: function (interval) {
                 var intervalID = window.setInterval(function () {
                     this.messageRepo.getNewMessages();
-                    document.querySelectorAll("#chatMessage")[0].value = "";
                 }.bind(this), interval);
             },
 
