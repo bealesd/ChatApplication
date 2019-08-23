@@ -1,10 +1,14 @@
 ﻿using ChatApplication.Models;
 using ChatApplication.Repo;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft;
 
 namespace ChatApplication.Controllers
 {
@@ -26,17 +30,6 @@ namespace ChatApplication.Controllers
             var messages = await MessageStoreAzure.GetMessages();
             @ViewData["Who"] = who;
             return View("ChatView", messages);
-        }
-
-        private async Task<Guid> GetLastDatabaseChatId()
-        {
-            Guid result = Guid.Empty;
-            var messages = await MessageStoreAzure.GetMessages();
-            if (messages != null && messages.Count() > 0)
-            {
-                result = MessageStore.GetMessages().Last().Id;
-            }
-            return result;
         }
 
         public async Task<IActionResult> GetLastTenChats()
@@ -69,7 +62,6 @@ namespace ChatApplication.Controllers
             return newMessages;
         }
 
-
         public async Task<IActionResult> GetTenChatsBeforeId(Guid firstClientId)
         {
             var allMessages = (await MessageStoreAzure.GetMessages()).ToList();
@@ -90,5 +82,36 @@ namespace ChatApplication.Controllers
             await MessageStoreAzure.AddMessage(chatMessage, DateTime.Now.Ticks, id, who);
             return RedirectToAction("LoadChatView", new { who = who });
         }
+
+        [HttpPost]
+        public async Task<ActionResult> PostMessage()
+        {
+            var id = Guid.NewGuid();
+            var bodyStr = "";
+            using (StreamReader reader = new StreamReader(HttpContext.Request.Body, Encoding.UTF8, true, 1024, true))
+            {
+                bodyStr = reader.ReadToEnd();
+            }
+            var json = Newtonsoft.Json.JsonConvert.DeserializeObject<MessageJson>(bodyStr);
+
+            await MessageStoreAzure.AddMessage(json.Message, DateTime.Now.Ticks, id, json.Username);
+            return StatusCode(200);
+        }
+
+        private async Task<Guid> GetLastDatabaseChatId()
+        {
+            Guid result = Guid.Empty;
+            var messages = await MessageStoreAzure.GetMessages();
+            if (messages != null && messages.Count() > 0)
+            {
+                result = MessageStore.GetMessages().Last().Id;
+            }
+            return result;
+        }
+    }
+    internal class MessageJson
+    {
+        public string Message { get; set; }
+        public string Username { get; set; }
     }
 }

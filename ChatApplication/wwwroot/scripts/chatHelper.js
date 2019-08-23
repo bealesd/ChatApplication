@@ -2,13 +2,16 @@
     function main() {
         return {
             validateAndSendChatMessage: function (id) {
-                var chatMessage = document.getElementById(id).value;
+                let chatMessage = document.getElementById(id).value;
                 if (!chatMessage.trim() || chatMessage.trim() === "" || chatMessage === null || chatMessage === undefined) {
                     alert("no message enterred");
                 }
                 else {
                     var username = document.getElementById("setUsername").value;
-                    window.location.href = window.location.origin + `/Chat/SendChatMessage?chatMessage=${chatMessage}&who=${username}`;
+                    if (username === null) return;
+                    new RestHelper().postMessage(chatMessage, username).then(function () {
+                        new MessageRepo().getNewMessages();
+                    }.bind(this));
                 }
             },
 

@@ -1,10 +1,7 @@
 ﻿function MessageRepo() {
-    restHelper = null;
     function main() {
         return {
             init: function () {
-                restHelper = RestHelper();
-                this.chatHelper = ChatHelper();
                 localStorage.setItem("newMessagesCount", "0");
             },
 
@@ -12,7 +9,7 @@
                 if (document.querySelectorAll("#messagesContainer > div").length === 0) return;
 
                 firstMessageId = document.getElementById("messagesContainer").children[0].dataset.id;
-                restHelper.get(`Chat/GetTenChatsBeforeId?firstClientId=${firstMessageId}`).then(function (results) {
+                RestHelper().get(`Chat/GetTenChatsBeforeId?firstClientId=${firstMessageId}`).then(function (results) {
                     if (results.length > 0) {
                         for (let i = results.length - 1; i >= 0; i--) {
                             let messageNode = this.createMessageNode(results[i]);
@@ -25,7 +22,7 @@
             },
 
             getLast10Messages: function () {
-                return restHelper.get("Chat/GetLastTenChats").then(function (results) {
+                return RestHelper().get("Chat/GetLastTenChats").then(function (results) {
                     if (results.length > 0) {
                         for (let i = 0; i < results.length; i++) {
                             let messageNode = this.createMessageNode(results[i]);
@@ -38,22 +35,28 @@
             },
 
             getNewMessages: function () {
-                return restHelper.get(`Chat/GetChatsAfterId?lastClientId=${lastMessageId}`).then(function (results) {
+                return RestHelper().get(`Chat/GetChatsAfterId?lastClientId=${lastMessageId}`).then(function (results) {
                     if (results.length > 0) {
                         for (let i = 0; i < results.length; i++) {
                             let messageNode = this.createMessageNode(results[i]);
-                            document.getElementById("messagesContainer").innerHTML += messageNode;
+                            if (messageNode !== null) document.getElementById("messagesContainer").innerHTML += messageNode;
                         }
                         lastMessageId = results[results.length - 1]['id'];
-                        this.chatHelper.scrollToBottom("messagesContainer");
+                        ChatHelper().scrollToBottom("messagesContainer");
 
                         localStorage.setItem("newMessagesCount", `${(parseInt(localStorage.getItem("newMessagesCount")) + 1)}`);
                     }
                     document.querySelectorAll("#messageControlsResponse > p")[0].innerHTML = `new messages: ${localStorage.getItem("newMessagesCount")}`;
+
+                    document.querySelectorAll("#chatMessage")[0].value = "";
+
                 }.bind(this));
             },
 
             createMessageNode: function (message) {
+                if (message === null || message['who'] === null) {
+                    return null;
+                }
                 let cSharpTicksFrom1900 = message['datetime'] / 10000;
                 let jsTicksFrom1900To1970 = Math.abs(new Date(0, 0, 1).setFullYear(1));
                 let messageDateTime = new Date(cSharpTicksFrom1900 - jsTicksFrom1900To1970);
