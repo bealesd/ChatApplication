@@ -22,7 +22,8 @@
             },
 
             getLast10Messages: function () {
-                return RestHelper().get("Chat/GetLastTenChats").then(function (results) {
+                return RestHelper().get("GetMessages?recordCount=10").then(function (results) {
+                    console.log(`\nGetting last 10 messages ${Date()}.`);
                     if (results.length > 0) {
                         for (let i = 0; i < results.length; i++) {
                             let messageNode = this.createMessageNode(results[i]);
@@ -35,7 +36,8 @@
             },
 
             getNewMessages: function () {
-                return RestHelper().get(`Chat/GetChatsAfterId?lastClientId=${lastMessageId}`).then(function (results) {
+                return RestHelper().get(`GeNewMessages?lastId=${lastMessageId}`).then(function (results) {
+                    console.log(`\nGetting new messages after id ${lastMessageId} on ${Date()}.`);
                     if (results.length > 0) {
                         let dict = {};
                         for (let i = 0; i < results.length; i++) {
@@ -57,12 +59,8 @@
             },
 
             createMessageNode: function (message) {
-                if (message === null || message['who'] === null) {
-                    return null;
-                }
-                let cSharpTicksFrom1900 = message['datetime'] / 10000;
-                let jsTicksFrom1900To1970 = Math.abs(new Date(0, 0, 1).setFullYear(1));
-                let messageDateTime = new Date(cSharpTicksFrom1900 - jsTicksFrom1900To1970);
+                if (message === null || message['who'] === null) return null;
+                let messageDateTime = new Date(message['datetime']);
 
                 let messageNode =
                     `<div data-id=${message['id']} class="${message['who'].toLowerCase()} messageNode">

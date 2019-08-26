@@ -1,6 +1,4 @@
-﻿@model List<ChatApplication.Models.Message>
-@{
-    var chatMessages = Model;
+﻿@{
     string who = (string)@ViewData["Who"];
 }
 
@@ -25,8 +23,6 @@
 <div id="messagesContainer">
 </div>
 
-
-
 <div id="sendChatForm">
     <textarea rows="1" style="height:2em;" id="chatMessage" maxlength="250" placeholder="type a message"></textarea>
     <div id="a">
@@ -36,8 +32,8 @@
 
 <div id="messageControls">
 
-    <a id="previous10MessagesButton"><span class="glyphicon glyphicon-arrow-up"></span></a>
-    <a id="newMessagesButton"><span class="glyphicon glyphicon-arrow-down"></span></a>
+    <a hidden id="previous10MessagesButton"><span class="glyphicon glyphicon-arrow-up"></span></a>
+    <a hidden id="newMessagesButton"><span class="glyphicon glyphicon-arrow-down"></span></a>
 </div>
 
 <div id="messageControlsResponse">
