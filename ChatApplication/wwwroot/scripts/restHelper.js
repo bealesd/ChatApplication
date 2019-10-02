@@ -1,9 +1,10 @@
 ﻿function RestHelper() {
     function main() {
         return {
+            //estherchatapinodeazure.azurewebsites.net/getmessages
+            //estherChatService
             get: function (suffix) {
-                //let getChatsUrl = window.location.origin + '/' + suffix;
-                let getChatsUrl = 'http://localhost:8080' + '/' + suffix;
+                let getChatsUrl = 'https://estherchatapinodeazure.azurewebsites.net/' + '/' + suffix;
                 var xhttp = new XMLHttpRequest();
                 xhttp.open('GET', getChatsUrl, true);
                 xhttp.timeout = 30000;
@@ -19,8 +20,7 @@
             },
 
             postMessage: function (chatMessage, username) {
-                //let chatsUrl = window.location.origin + '/Chat/PostMessage';
-                let chatsUrl = 'http://localhost:8080/postMessage';
+                let chatsUrl = 'https://estherchatapinodeazure.azurewebsites.net/postMessage';
                 let xhttp = new XMLHttpRequest();
                 xhttp.open('POST', chatsUrl, true);
                 xhttp.setRequestHeader("Content-type", "application/json");

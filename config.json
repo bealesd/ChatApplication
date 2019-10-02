@@ -1,0 +1,7 @@
+{
+  "storageAccount": "chatstore",
+  "storageKey": "vRHSRbdkkOhg5hSIqJ/HNVFoaX5fRycas+SbvlyWS08A4ZBNst2cmkYvRt7GFmJdCNNqfA3+u39n5Nb/0ngUvQ==",
+  "storageTable": "chatStoreTest",
+  "storageTableDev": "chatStoreTest"
+
+}
