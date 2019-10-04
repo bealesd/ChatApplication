@@ -1,10 +1,10 @@
 ﻿function RestHelper() {
     function main() {
+        const live = true;
+        const urlPrefex = live ? 'https://estherchatapinodeazure.azurewebsites.net/' : 'http://localhost:1337/';
         return {
-            //estherchatapinodeazure.azurewebsites.net/
-            //localhost:1337
             get: function (suffix) {
-                let getChatsUrl = 'https://estherchatapinodeazure.azurewebsites.net' + '/' + suffix;
+                let getChatsUrl = urlPrefex + suffix;
                 var xhttp = new XMLHttpRequest();
                 xhttp.open('GET', getChatsUrl, true);
                 xhttp.timeout = 30000;
@@ -20,7 +20,7 @@
             },
 
             postMessage: function (chatMessage, username) {
-                let chatsUrl = 'https://estherchatapinodeazure.azurewebsites.net/postMessage';
+                let chatsUrl = urlPrefex + 'postMessage';
                 let xhttp = new XMLHttpRequest();
                 xhttp.open('POST', chatsUrl, true);
                 xhttp.setRequestHeader("Content-type", "application/json");
