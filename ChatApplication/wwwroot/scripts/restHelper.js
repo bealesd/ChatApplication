@@ -1,10 +1,10 @@
 ﻿function RestHelper() {
     function main() {
         return {
-            //estherchatapinodeazure.azurewebsites.net/getmessages
-            //estherChatService
+            //estherchatapinodeazure.azurewebsites.net/
+            //localhost:1337
             get: function (suffix) {
-                let getChatsUrl = 'https://estherchatapinodeazure.azurewebsites.net/' + '/' + suffix;
+                let getChatsUrl = 'https://estherchatapinodeazure.azurewebsites.net' + '/' + suffix;
                 var xhttp = new XMLHttpRequest();
                 xhttp.open('GET', getChatsUrl, true);
                 xhttp.timeout = 30000;
