@@ -5,7 +5,7 @@
 <div id="usernameContainer">
     <h4>
         Chatting as
-        <select id="setUsername">
+        <select id="username">
             @if (who == "David")
             {
                 <option selected value="David">David</option>
@@ -42,7 +42,7 @@
 
 <script>
     $(document).ready(function () {
-        this.chat.init("@Guid.Empty", "@Guid.Empty");
+        //this.chat.init("@Guid.Empty", "@Guid.Empty");
         this.chat.onLoad();
     }.bind(this))
 </script>
