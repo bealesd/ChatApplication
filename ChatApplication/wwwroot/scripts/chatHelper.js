@@ -1,16 +1,13 @@
-﻿export class ChatHelper {
+﻿import { CoreHelper } from './coreHelper.js';
+
+export class ChatHelper {
     //local storage
     newMessagesCountKey = 'newMessagesCount';
+    messageControlsResponseId = 'messageControlsResponse';
 
-    constructor() {
-    }
-
-    static isNotEmptyString(value) {
-        return this.isString(value) && value.trim() !== "";
-    }
-
-    static isString(value) {
-        return Object.prototype.toString.call(value) === '[object String]';
+    static updateMessageCountElement() {
+        const messageControlsResponseElement = document.querySelector(`#${this.messageControlsResponseId} > p`);
+        messageControlsResponseElement.innerHTML = `new messages: ${this.getMessageCount()}`;
     }
 
     static updateMessageBox(chatMessage) {
@@ -18,12 +15,15 @@
         textElement.style.height = textElement.scrollHeight + 'px';
     }
 
-    static getMessageCount() {
-        return localStorage.getItem(this.newMessagesCountKey);
-    }
+    static createMessageNode(messageObject) {
+        const messagesProperties = ['id', 'who', 'datetime', 'content'];
+        if (!CoreHelper.hasProperiesOfStringOrNumberOnly(messageObject, messagesProperties)) return null;
 
-    static setMessageCount(count) {
-        localStorage.setItem(this.newMessagesCountKey, `${count}`);
+        const messageDateTime = new Date(messageObject['datetime']);
+        return `<div data-id=${messageObject['id']} class="${messageObject['who'].toLowerCase()} messageNode">
+                        <p class="dateTime">${messageDateTime.toUTCString()}</p>
+                        <p class="${messageObject['who'].toLowerCase()}Message">${messageObject['content']}</p>
+                </div>`;
     }
 
     static scrollToBottom(htmlMessagesContainer) {
@@ -32,43 +32,11 @@
         }
     }
 
-    static isArray(value) {
-        return Object.prototype.toString.call(value) === "[object Object]";
+    static getMessageCount() {
+        return localStorage.getItem(this.newMessagesCountKey);
     }
 
-    static isNumber(value) {
-        return Object.prototype.toString.call(value) === "[object Number]";
-    }
-
-    static hasProperties(object, propertiesArray) {
-        for (var i = 0; i < propertiesArray.length; i++) {
-            let value = propertiesArray[i];
-            if (!this.hasProperty(object, value)) return false;
-        }
-        return true;
-    }
-
-    static hasProperiesOfStringOrNumberOnly(object, propertiesArray) {
-        if (!this.hasProperties(object, propertiesArray)) return false;
-        for (var i = 0; i < propertiesArray.length; i++) {
-            let value = propertiesArray[i];
-            if (!this.isNumber(object[value]) === true && !this.isString(object[value]) === true) return false;
-        }
-        return true;
-    }
-
-    static hasProperty(obj, property) {
-        return Object.prototype.hasOwnProperty.call(obj, property);
-    }
-
-    static createMessageNode(messageObject) {
-        const messagesProperties = ['id', 'who', 'datetime', 'content'];
-        if (!this.hasProperiesOfStringOrNumberOnly(messageObject, messagesProperties)) return null;
-
-        const messageDateTime = new Date(messageObject['datetime']);
-        return `<div data-id=${messageObject['id']} class="${messageObject['who'].toLowerCase()} messageNode">
-                        <p class="dateTime">${messageDateTime.toUTCString()}</p>
-                        <p class="${messageObject['who'].toLowerCase()}Message">${messageObject['content']}</p>
-                </div>`;
+    static setMessageCount(count) {
+        localStorage.setItem(this.newMessagesCountKey, `${count}`);
     }
 }

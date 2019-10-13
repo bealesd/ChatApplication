@@ -10,7 +10,7 @@ export class MessageRepo {
         if (!MessageRepo.instance) {
             MessageRepo.instance = this;
 
-            this.restHelper = new RestHelper();
+            this.restHelper = new RestHelper(window.ChatUrlPrefix);
             ChatHelper.setMessageCount(0);
 
             this.messageContainerElement = document.querySelector(`#${this.messagesContainerId}`);
@@ -20,7 +20,11 @@ export class MessageRepo {
     }
 
     postMessage(message, username) {
-        this.restHelper.postMessage(message, username).then(function (res) {
+        var json = {
+            'Message': `${message}`,
+            'Username': `${username}`
+        };
+        this.restHelper.postJson('postMessage', json).then(function (res) {
             console.log(res);
             this.getNewMessages();
         }.bind(this));
@@ -74,7 +78,7 @@ export class MessageRepo {
 
                 ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
             }
-            this.messageControlsResponseElement.innerHTML = `new messages: ${ChatHelper.getMessageCount()}`;
+            ChatHelper.updateMessageCountElement();
 
         }.bind(this));
     }

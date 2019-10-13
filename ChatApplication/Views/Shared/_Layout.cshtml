@@ -31,6 +31,7 @@
     </div>
 
     <script type="module">
+        window.ChatUrlPrefix = '@ViewData["ChatUrlPrefix"]';
         import { ChatMain } from './scripts/chatMain.js';
         window.chat = new ChatMain("@Guid.Empty", "@Guid.Empty");
     </script>

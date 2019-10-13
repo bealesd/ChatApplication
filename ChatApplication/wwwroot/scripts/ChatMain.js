@@ -1,5 +1,6 @@
 ﻿import { ChatHelper } from './chatHelper.js';
 import { MessageRepo } from './messageRepo.js';
+import { CoreHelper } from './coreHelper.js';
 
 /**
  * ChatMain, setups the chat application
@@ -8,6 +9,7 @@ export class ChatMain {
 
     lastMessageId = null;
     firstMessageId = null;
+
     //dom elemnent ids
     usernameId = "username";
     userInputChatMessageId = 'chatMessage';
@@ -68,7 +70,7 @@ export class ChatMain {
 
     setupChatInputBox() {
         this.submitMessageButtonElement.addEventListener("click", function () {
-            if (ChatHelper.isNotEmptyString(this.userInputChatMessageElement.value)) {
+            if (CoreHelper.isNotEmptyString(this.userInputChatMessageElement.value)) {
                 this.messageRepo.postMessage(this.userInputChatMessageElement.value, this.usernameElement.value);
             }
             else alert('No message entered!');
@@ -78,6 +80,7 @@ export class ChatMain {
     registerTabSwitch() {
         $(window).blur(function () {
             ChatHelper.setMessageCount(0);
+            ChatHelper.updateMessageCountElement();
         }.bind(this));
     }
 }
