@@ -1,13 +1,14 @@
 ﻿import { CoreHelper } from './coreHelper.js';
 
 export class ChatHelper {
-    //local storage
-    newMessagesCountKey = 'newMessagesCount';
-    messageControlsResponseId = 'messageControlsResponse';
-
+    constructor() {
+        //local storage
+        ChatHelper.newMessagesCountKey = 'newMessagesCount';
+        ChatHelper.messageControlsResponseId = 'messageControlsResponse';
+    }
     static updateMessageCountElement() {
-        const messageControlsResponseElement = document.querySelector(`#${this.messageControlsResponseId} > p`);
-        messageControlsResponseElement.innerHTML = `new messages: ${this.getMessageCount()}`;
+        const messageControlsResponseElement = document.querySelector(`#${ChatHelper.messageControlsResponseId} > p`);
+        messageControlsResponseElement.innerHTML = `new messages: ${ChatHelper.getMessageCount()}`;
     }
 
     static updateMessageBox(chatMessage) {
