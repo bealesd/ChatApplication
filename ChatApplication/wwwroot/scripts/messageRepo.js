@@ -25,8 +25,8 @@ export class MessageRepo {
             'Message': `${message}`,
             'Username': `${username}`
         };
-        this.restHelper.postJson('postMessage', json).then(function (res) {
-            console.log(res);
+        this.restHelper.postJson('postMessage', json).then(function (result) {
+            console.log(result);
 
             //const id = res.substring(res.indexOf('Message posted: ') + 'Message posted: '.length)
             //this.getNewMessages(id);
