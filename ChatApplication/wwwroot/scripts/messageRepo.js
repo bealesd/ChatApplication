@@ -1,5 +1,6 @@
 ﻿import { RestHelper } from './restHelper.js';
 import { ChatHelper } from './chatHelper.js';
+import { CoreHelper } from './coreHelper.js';
 
 export class MessageRepo {
     lastMessageId = '';
@@ -26,7 +27,8 @@ export class MessageRepo {
         };
         this.restHelper.postJson('postMessage', json).then(function (res) {
             console.log(res);
-            this.getNewMessages();
+            const id = res.substring(res.indexOf('Message posted: ') + 'Message posted: '.length)
+            this.getNewMessages(id);
         }.bind(this));
     }
 
@@ -60,12 +62,15 @@ export class MessageRepo {
         }.bind(this));
     }
 
-    getNewMessages() {
-        return this.restHelper.get(`GeNewMessages?lastId=${this.lastMessageId}`).then(function (results) {
-            console.log(`\nGetting new messages after id ${this.lastMessageId} on ${Date()}.`);
-            if (results.length > 0) {
+    getNewMessages(id) {
+        const getQuery = CoreHelper.isNotEmptyString(id) ? `GeNewMessages?lastId=${id}` : `GeNewMessages?lastId=${this.lastMessageId}`;
+        const update = CoreHelper.isNotEmptyString(id) ? true: false;
+        return this.restHelper.get(getQuery).then(function (results) {
+
+            //utter filth, dirty hack. get messages always return at least one result, we ignore that result if a post wasnt made
+            if (!update && results.length > 1) {//ignore first element
                 let dict = {};
-                for (let i = 0; i < results.length; i++) {
+                for (let i = 1; i < results.length; i++) {
                     let id = results[i].id;
                     if (dict[`${id}`] === undefined) {
                         dict[`${id}`] = "";
@@ -78,8 +83,22 @@ export class MessageRepo {
 
                 ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
             }
-            ChatHelper.updateMessageCountElement();
 
+            else if (update && results.length === 1) {
+                const result = results[0];
+                let messageNode = ChatHelper.createMessageNode(result);
+                if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
+                this.lastMessageId = result.id;
+                ChatHelper.scrollToBottom(this.messageContainerElement);
+
+                ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
+            }
+
+            else {
+                // do nothing
+            }
+
+            ChatHelper.updateMessageCountElement();
         }.bind(this));
     }
 }
