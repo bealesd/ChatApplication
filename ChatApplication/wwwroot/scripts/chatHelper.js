@@ -17,7 +17,7 @@ export class ChatHelper {
     }
 
     static createMessageNode(messageObject) {
-        const messagesProperties = ['id', 'who', 'datetime', 'content'];
+        const messagesProperties = ['Id', 'Who', 'Datetime', 'Content'];
         if (!CoreHelper.hasProperiesOfStringOrNumberOnly(messageObject, messagesProperties)) return null;
 
         const messageDateTime = new Date(messageObject['datetime']);
