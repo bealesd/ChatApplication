@@ -16,6 +16,11 @@ export class ChatHelper {
         textElement.style.height = textElement.scrollHeight + 'px';
     }
 
+    static clearMessageBox() {
+        let textElement = document.querySelector(`#${chatMessage}`);
+        textElement.value = ''
+    }
+
     static createMessageNode(messageObject) {
         const messagesProperties = ['Id', 'Who', 'Datetime', 'Content'];
         if (!CoreHelper.hasProperiesOfStringOrNumberOnly(messageObject, messagesProperties)) return null;

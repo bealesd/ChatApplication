@@ -36,6 +36,7 @@ export class MessageRepo {
             ChatHelper.scrollToBottom(this.messageContainerElement);
 
             ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
+            ChatHelper.clearMessageBox();
         }.bind(this));
     }
 
@@ -90,38 +91,6 @@ export class MessageRepo {
 
                 ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
             }
-
-
-            //utter filth, dirty hack. get messages always return at least one result, we ignore that result if a post wasnt made
-            //if (!update && results.length > 1) {//ignore first element
-            //    let dict = {};
-            //    for (let i = 1; i < results.length; i++) {
-            //        let id = results[i].id;
-            //        if (dict[`${id}`] === undefined) {
-            //            dict[`${id}`] = "";
-            //            let messageNode = ChatHelper.createMessageNode(results[i]);
-            //            if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
-            //        }
-            //    }
-            //    this.lastMessageId = results[results.length - 1]['id'];
-            //    ChatHelper.scrollToBottom(this.messageContainerElement);
-
-            //    ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
-            //}
-
-            //else if (update && results.length === 1) {
-            //    const result = results[0];
-            //    let messageNode = ChatHelper.createMessageNode(result);
-            //    if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
-            //    this.lastMessageId = result.id;
-            //    ChatHelper.scrollToBottom(this.messageContainerElement);
-
-            //    ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
-            //}
-
-            //else {
-            //    // do nothing
-            //}
 
             ChatHelper.updateMessageCountElement();
         }.bind(this));
