@@ -27,8 +27,15 @@ export class MessageRepo {
         };
         this.restHelper.postJson('postMessage', json).then(function (res) {
             console.log(res);
-            const id = res.substring(res.indexOf('Message posted: ') + 'Message posted: '.length)
-            this.getNewMessages(id);
+
+            //const id = res.substring(res.indexOf('Message posted: ') + 'Message posted: '.length)
+            //this.getNewMessages(id);
+            let messageNode = ChatHelper.createMessageNode(result);
+            if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
+            this.lastMessageId = result.id;
+            ChatHelper.scrollToBottom(this.messageContainerElement);
+
+            ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
         }.bind(this));
     }
 
@@ -64,39 +71,53 @@ export class MessageRepo {
 
     getNewMessages(id) {
         const getQuery = CoreHelper.isNotEmptyString(id) ? `GeNewMessages?lastId=${id}` : `GeNewMessages?lastId=${this.lastMessageId}`;
-        const update = CoreHelper.isNotEmptyString(id) ? true: false;
+        //const update = CoreHelper.isNotEmptyString(id) ? true: false;
         return this.restHelper.get(getQuery).then(function (results) {
 
-            //utter filth, dirty hack. get messages always return at least one result, we ignore that result if a post wasnt made
-            if (!update && results.length > 1) {//ignore first element
-                let dict = {};
-                for (let i = 1; i < results.length; i++) {
-                    let id = results[i].id;
-                    if (dict[`${id}`] === undefined) {
-                        dict[`${id}`] = "";
-                        let messageNode = ChatHelper.createMessageNode(results[i]);
-                        if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
-                    }
+            let dict = {};
+            for (let i = 1; i < results.length; i++) {
+                let id = results[i].id;
+                if (dict[`${id}`] === undefined) {
+                    dict[`${id}`] = "";
+                    let messageNode = ChatHelper.createMessageNode(results[i]);
+                    if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
                 }
-                this.lastMessageId = results[results.length - 1]['id'];
-                ChatHelper.scrollToBottom(this.messageContainerElement);
-
-                ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
             }
+            this.lastMessageId = results[results.length - 1]['id'];
+            ChatHelper.scrollToBottom(this.messageContainerElement);
 
-            else if (update && results.length === 1) {
-                const result = results[0];
-                let messageNode = ChatHelper.createMessageNode(result);
-                if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
-                this.lastMessageId = result.id;
-                ChatHelper.scrollToBottom(this.messageContainerElement);
+            ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
 
-                ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
-            }
+            //utter filth, dirty hack. get messages always return at least one result, we ignore that result if a post wasnt made
+            //if (!update && results.length > 1) {//ignore first element
+            //    let dict = {};
+            //    for (let i = 1; i < results.length; i++) {
+            //        let id = results[i].id;
+            //        if (dict[`${id}`] === undefined) {
+            //            dict[`${id}`] = "";
+            //            let messageNode = ChatHelper.createMessageNode(results[i]);
+            //            if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
+            //        }
+            //    }
+            //    this.lastMessageId = results[results.length - 1]['id'];
+            //    ChatHelper.scrollToBottom(this.messageContainerElement);
 
-            else {
-                // do nothing
-            }
+            //    ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
+            //}
+
+            //else if (update && results.length === 1) {
+            //    const result = results[0];
+            //    let messageNode = ChatHelper.createMessageNode(result);
+            //    if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
+            //    this.lastMessageId = result.id;
+            //    ChatHelper.scrollToBottom(this.messageContainerElement);
+
+            //    ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
+            //}
+
+            //else {
+            //    // do nothing
+            //}
 
             ChatHelper.updateMessageCountElement();
         }.bind(this));
