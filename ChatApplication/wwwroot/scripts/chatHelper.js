@@ -5,19 +5,20 @@ export class ChatHelper {
         //local storage
         ChatHelper.newMessagesCountKey = 'newMessagesCount';
         ChatHelper.messageControlsResponseId = 'messageControlsResponse';
+        ChatHelper.chatMessage = 'chatMessage';
     }
     static updateMessageCountElement() {
         const messageControlsResponseElement = document.querySelector(`#${ChatHelper.messageControlsResponseId} > p`);
         messageControlsResponseElement.innerHTML = `new messages: ${ChatHelper.getMessageCount()}`;
     }
 
-    static updateMessageBox(chatMessage) {
-        let textElement = document.querySelector(`#${chatMessage}`);
+    static updateMessageBox() {
+        let textElement = document.querySelector(`#${ChatHelper.chatMessage}`);
         textElement.style.height = textElement.scrollHeight + 'px';
     }
 
     static clearMessageBox() {
-        let textElement = document.querySelector(`#${chatMessage}`);
+        let textElement = document.querySelector(`#${ChatHelper.chatMessage}`);
         textElement.value = ''
     }
 
