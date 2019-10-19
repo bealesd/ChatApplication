@@ -63,7 +63,7 @@ export class MessageRepo {
                     let messageNode = ChatHelper.createMessageNode(results[i]);
                     if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
                 }
-                this.lastMessageId = results[results.length - 1]['id'];
+                this.lastMessageId = results[results.length - 1]['Id'];
             }
             else this.messageControlsResponseElement.innerHTML = "no messages";
         }.bind(this));
@@ -78,14 +78,14 @@ export class MessageRepo {
 
                 let dict = {};
                 for (let i = 0; i < results.length; i++) {
-                    let id = results[i].id;
+                    let id = results[i].Id;
                     if (dict[`${id}`] === undefined) {
                         dict[`${id}`] = "";
                         let messageNode = ChatHelper.createMessageNode(results[i]);
                         if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
                     }
                 }
-                this.lastMessageId = results[results.length - 1]['id'];
+                this.lastMessageId = results[results.length - 1]['Id'];
                 ChatHelper.scrollToBottom(this.messageContainerElement);
 
                 ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
