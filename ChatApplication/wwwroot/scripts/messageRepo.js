@@ -69,24 +69,28 @@ export class MessageRepo {
         }.bind(this));
     }
 
-    getNewMessages(id) {
-        const getQuery = CoreHelper.isNotEmptyString(id) ? `GeNewMessages?lastId=${id}` : `GeNewMessages?lastId=${this.lastMessageId}`;
+    getNewMessages() {
+        const getQuery = `GeNewMessages?lastId=${this.lastMessageId}`;
+        //const getQuery = CoreHelper.isNotEmptyString(id) ? `GeNewMessages?lastId=${id}` : `GeNewMessages?lastId=${this.lastMessageId}`;
         //const update = CoreHelper.isNotEmptyString(id) ? true: false;
         return this.restHelper.get(getQuery).then(function (results) {
+            if (results.length > 0) {
 
-            let dict = {};
-            for (let i = 1; i < results.length; i++) {
-                let id = results[i].id;
-                if (dict[`${id}`] === undefined) {
-                    dict[`${id}`] = "";
-                    let messageNode = ChatHelper.createMessageNode(results[i]);
-                    if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
+                let dict = {};
+                for (let i = 0; i < results.length; i++) {
+                    let id = results[i].id;
+                    if (dict[`${id}`] === undefined) {
+                        dict[`${id}`] = "";
+                        let messageNode = ChatHelper.createMessageNode(results[i]);
+                        if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
+                    }
                 }
-            }
-            this.lastMessageId = results[results.length - 1]['id'];
-            ChatHelper.scrollToBottom(this.messageContainerElement);
+                this.lastMessageId = results[results.length - 1]['id'];
+                ChatHelper.scrollToBottom(this.messageContainerElement);
 
-            ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
+                ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
+            }
+
 
             //utter filth, dirty hack. get messages always return at least one result, we ignore that result if a post wasnt made
             //if (!update && results.length > 1) {//ignore first element
