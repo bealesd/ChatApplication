@@ -32,7 +32,7 @@ export class MessageRepo {
             //this.getNewMessages(id);
             let messageNode = ChatHelper.createMessageNode(result);
             if (messageNode !== null) this.messageContainerElement.innerHTML += messageNode;
-            this.lastMessageId = result.id;
+            this.lastMessageId = result.Id;
             ChatHelper.scrollToBottom(this.messageContainerElement);
 
             ChatHelper.setMessageCount(`${(parseInt(ChatHelper.getMessageCount()) + 1)}`);
