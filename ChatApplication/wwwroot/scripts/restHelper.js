@@ -1,38 +1,32 @@
-﻿import { CoreHelper } from './coreHelper.js';
-
-export class RestHelper {
+﻿export class RestHelper {
     constructor(urlPrefex) {
         this.urlPrefex = urlPrefex;
     }
 
+    status(response) {
+        if (response.status >= 200 && response.status < 300) {
+            return Promise.resolve(response)
+        } else { return Promise.reject(new Error(response.statusText)) }
+    }
+
+    json(response) { return response.json(); }
+
     get(suffix) {
-        let getChatsUrl = this.urlPrefex + suffix;
-        var xhttp = new XMLHttpRequest();
-        xhttp.open('GET', getChatsUrl, true);
-        xhttp.timeout = 30000;
-        xhttp.send();
-        return this.getResults(xhttp);
+        const url = this.urlPrefex + suffix;
+        return fetch(url)
+            .then(this.status)
+            .then(this.json);
     }
 
     postJson(suffix, json) {
-        let chatsUrl = this.urlPrefex + suffix;
-        let xhttp = new XMLHttpRequest();
-        xhttp.open('POST', chatsUrl, true);
-        xhttp.setRequestHeader("Content-type", "application/json");
-        xhttp.timeout = 30000;
-        xhttp.send(JSON.stringify(json));
-        return this.getResults(xhttp);
-    }
-
-    getResults(xhttp) {
-        return new Promise(function (res, rej) {
-            xhttp.onreadystatechange = function () {
-                if (this.readyState === 4 && (this.status === 200 || this.status === 201)) {
-                    return res(CoreHelper.isJsonString(this.responseText) ? JSON.parse(this.responseText) : this.responseText);
-                }
-                if (this.readyState === 4 && (this.status !== 200 || this.status !== 201))
-                    return rej();
-            };
-        }.bind(this));
+        const url = this.urlPrefex + suffix;
+        return fetch(url, {
+            method: 'post',
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify(json)
+        })
+        .then(this.json)
     }
 }
