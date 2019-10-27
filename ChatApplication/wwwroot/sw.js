@@ -39,10 +39,10 @@ self.addEventListener('fetch', event => {
     const req = event.request;
     const url = new URL(req.url);
     if (url.origin === location.origin) {
-        cacheFirst(event);
+        return cacheFirst(event);
     }
     else if (url.pathname.toLowerCase() === "/getmessages") {
-        cacheFirst(event);
+        return event.respondWith(networkElseCache(event));
     }
     else if (url.pathname.toLowerCase() === "/genewmessages") {
         const emptyJsonResponse = new Response(JSON.stringify([]), {
@@ -90,4 +90,33 @@ function cacheFirst(event) {
                 }
             })
     );
+}
+
+function networkElseCache(event) {
+    return caches.match(event.request)
+        .then(match => {
+            if (!match) {
+                return fetch(event.request).then((response) => {
+                    const responseClone = response.clone();
+                    caches.open(cacheName).then(cache => {
+                        cache.put(event.request, responseClone);
+                    })
+                    return response;
+                }).catch(() => {
+                    return new Response(JSON.stringify([]), {
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                });
+            }
+            return fetch(event.request)
+                .then(response => {
+                    const responseClone = response.clone();
+                    caches.open(cacheName).then(cache => {
+                        cache.put(event.request, responseClone);
+                    })
+                    return response;
+                }).catch(() => {
+                    return match;
+                })
+        });
 }
