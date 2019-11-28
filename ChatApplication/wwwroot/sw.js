@@ -1,4 +1,4 @@
-﻿const cacheName = `chatCache_v1`;
+﻿const cacheName = `chatCache_v2`;
 
 self.addEventListener('install', event => {
     event.waitUntil(
