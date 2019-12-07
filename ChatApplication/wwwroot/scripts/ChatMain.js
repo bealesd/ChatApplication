@@ -31,11 +31,38 @@ export class ChatMain {
     }
 
     onLoad() {
+        CoreHelper.loadLibrary();
+        this.setupEmojis();
+
         this.loadChats();
         this.registerChatEvents();
         this.startNewMessagesWorker(10000);
         this.setTheme(this.usernameElement.value);
         this.userInputChatMessageElement.focus();
+    }
+
+    setupEmojis() {
+        const emojiContainerElement = document.querySelector("#emojiContainer");
+        const emojiCharLeft = String.fromCharCode(55357);
+        const emojiObjects = {
+            "happy": emojiCharLeft + String.fromCharCode(56898),
+            "flat": String.fromCharCode(55357) + String.fromCharCode(56848),
+            "unsure": String.fromCharCode(55357) + String.fromCharCode(56853),
+            "sad": String.fromCharCode(55357) + String.fromCharCode(56863),
+            "cheeky": String.fromCharCode(55357) + String.fromCharCode(56859),
+            "sadTear": String.fromCharCode(55357) + String.fromCharCode(56866),
+            "angry": String.fromCharCode(55357) + String.fromCharCode(56864)
+        };
+        Object.keys(emojiObjects).forEach((key) => {
+            emojiContainerElement.innerHTML += `<a id="${key}">${emojiObjects[key]}</a>`;
+        });
+
+        Object.keys(emojiObjects).forEach((key) => {
+            document.querySelector(`#${key}`).addEventListener("click", (event) => {
+                const id = event.srcElement.id;
+                document.querySelector('#chatMessage').innerHTML += `${emojiObjects[id]}`;
+            });
+        });
     }
 
     loadChats() {

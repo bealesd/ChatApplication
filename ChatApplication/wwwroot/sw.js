@@ -1,4 +1,4 @@
-﻿const cacheName = `chatCache_v2`;
+﻿const cacheName = `chatCache_v3`;
 
 self.addEventListener('install', event => {
     event.waitUntil(
@@ -35,37 +35,37 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-self.addEventListener('fetch', event => {
-    const req = event.request;
-    const url = new URL(req.url);
-    if (url.origin === location.origin) {
-        return cacheFirst(event);
-    }
-    else if (url.pathname.toLowerCase() === "/getmessages") {
-        return event.respondWith(networkElseCache(event));
-    }
-    else if (url.pathname.toLowerCase() === "/genewmessages") {
-        const emptyJsonResponse = new Response(JSON.stringify([]), {
-            headers: { 'Content-Type': 'application/json' }
-        });
-        const id = url.searchParams.get("lastId");
-        if (id === undefined || id === null || id === '') {
-            console.log(`Last id was not defined.`)
-            event.respondWith(emptyJsonResponse);
-        }
+//self.addEventListener('fetch', event => {
+//    const req = event.request;
+//    const url = new URL(req.url);
+//    if (url.origin === location.origin) {
+//        return cacheFirst(event);
+//    }
+//    else if (url.pathname.toLowerCase() === "/getmessages") {
+//        return event.respondWith(networkElseCache(event));
+//    }
+//    else if (url.pathname.toLowerCase() === "/genewmessages") {
+//        const emptyJsonResponse = new Response(JSON.stringify([]), {
+//            headers: { 'Content-Type': 'application/json' }
+//        });
+//        const id = url.searchParams.get("lastId");
+//        if (id === undefined || id === null || id === '') {
+//            console.log(`Last id was not defined.`);
+//            event.respondWith(emptyJsonResponse);
+//        }
 
-        event.respondWith(
-            fetch(event.request)
-                .then((response) => {
-                    return response;
-                }).catch((e) => {
-                    console.log(`Network Error, could not request resource: ${e.message}.`)
-                    return emptyJsonResponse;
-                })
-        )
+//        event.respondWith(
+//            fetch(event.request)
+//                .then((response) => {
+//                    return response;
+//                }).catch((e) => {
+//                    console.log(`Network Error, could not request resource: ${e.message}.`);
+//                    return emptyJsonResponse;
+//                })
+//        );
 
-    }
-})
+//    }
+//});
 
 function cacheFirst(event) {
     event.respondWith(
@@ -83,10 +83,10 @@ function cacheFirst(event) {
                                 .then((cache) => {
                                     cache.put(event.request, response.clone());
                                     return response;
-                                })
+                                });
                         }).catch((e) => {
-                            console.log(`Network Error, could not request resource: ${e.message}`)
-                        })
+                            console.log(`Network Error, could not request resource: ${e.message}`);
+                        });
                 }
             })
     );
@@ -113,10 +113,10 @@ function networkElseCache(event) {
                     const responseClone = response.clone();
                     caches.open(cacheName).then(cache => {
                         cache.put(event.request, responseClone);
-                    })
+                    });
                     return response;
                 }).catch(() => {
                     return match;
-                })
+                });
         });
 }

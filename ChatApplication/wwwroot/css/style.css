@@ -15,6 +15,11 @@ input {
     color: black;
 }
 
+#emojiContainer {
+    padding-left:80px;
+    padding-bottom: 10px;
+}
+
 #messagesContainer {
     display: inline-block;
     font-size: 14px;

@@ -40,22 +40,6 @@ export class MessageRepo {
             });
     }
 
-    getPrevious10Messages() {
-        if (document.querySelectorAll(`#${this.messagesContainerId} > div`).length === 0) return;
-
-        firstMessageId = this.messageContainerElement.children[0].dataset.id;
-        this.restHelper.get(`Chat/GetTenChatsBeforeId?firstClientId=${firstMessageId}`).then(function (results) {
-            if (results.length > 0) {
-                for (let i = results.length - 1; i >= 0; i--) {
-                    let messageNode = ChatHelper.createMessageNode(results[i]);
-                    this.messageContainerElement.innerHTML = messageNode + this.messageContainerElement.innerHTML;
-                }
-            }
-            else this.messageControlsResponseElement.innerHTML = "no older messages";
-        }.bind(this));
-        return firstMessageId;
-    }
-
     getLast10Messages() {
         return this.restHelper.get("GetMessages?recordCount=10")
             .then((results) => {

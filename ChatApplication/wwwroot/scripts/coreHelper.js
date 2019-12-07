@@ -1,30 +1,25 @@
 ﻿export class CoreHelper {
-    static isNotEmptyString(value) {
-        return this.isString(value) && value.trim() !== "";
-    }
+    static loadLibrary() {
+        Object.prototype.hasOwnPropertyLowerCase = function (prop) {
+            return Object.keys(this)
+                .filter(function (key) {
+                    return key.toLowerCase() === prop.toLowerCase();
+                }).length > 0;
+        };
 
-    static isString(value) {
-        return Object.prototype.toString.call(value) === '[object String]';
-    }
+        Object.prototype.isString = (value) => { return Object.prototype.toString.call(value) === '[object String]'; };
 
-    static isArray(value) {
-        return Object.prototype.toString.call(value) === "[object Array]";
-    }
+        Object.prototype.isNotEmptyString = (value) => { return Object.prototype.isString(value) && value.trim() !== ""; };
 
-    static isObject(value) {
-        return Object.prototype.toString.call(value) === "[object Object]";
-    }
+        Object.prototype.isArray = (value) => { return Object.prototype.toString.call(value) === '[object Array]'; };
 
-    static isNumber(value) {
-        return Object.prototype.toString.call(value) === "[object Number]";
-    }
+        Object.prototype.isObject = (value) => { return Object.prototype.toString.call(value) === '[object Object]'; };
 
-    static hasProperty(obj, property) {
-        return Object.prototype.hasOwnProperty.call(obj, property);
-    }
+        Object.prototype.isNumber = (value) => { return Object.prototype.toString.call(value) === '[object Number]'; };
 
-    static mergeObjects(obj1, obj2) {
-        return Object.assign(obj1, obj2);
+        Object.prototype.hasProperty = (obj, property) => { return Object.prototype.hasOwnPropertyLowerCase.call(obj, property); };
+
+        Object.prototype.mergeObjects = (obj1, obj2) => { return Object.assign(obj1, obj2); };
     }
 
     static isJsonString(str) {
@@ -35,7 +30,7 @@
     static hasProperties(object, propertiesArray) {
         for (var i = 0; i < propertiesArray.length; i++) {
             let value = propertiesArray[i];
-            if (!this.hasProperty(object, value)) return false;
+            if (!Object.prototype.hasProperty(object, value)) return false;
         }
         return true;
     }
@@ -44,7 +39,7 @@
         if (!this.hasProperties(object, propertiesArray)) return false;
         for (var i = 0; i < propertiesArray.length; i++) {
             let value = propertiesArray[i];
-            if (!this.isNumber(object[value]) === true && !this.isString(object[value]) === true) return false;
+            if (!Object.prototype.isNumber(object[value]) === true && !Object.prototype.isString(object[value]) === true) return false;
         }
         return true;
     }
