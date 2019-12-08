@@ -60,7 +60,7 @@ export class ChatMain {
         Object.keys(emojiObjects).forEach((key) => {
             document.querySelector(`#${key}`).addEventListener("click", (event) => {
                 const id = event.srcElement.id;
-                document.querySelector('#chatMessage').innerHTML += `${emojiObjects[id]}`;
+                document.querySelector('#chatMessage').value += `${emojiObjects[id]}`;
             });
         });
     }
