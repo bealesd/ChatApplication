@@ -46,12 +46,12 @@ export class ChatMain {
         const emojiCharLeft = String.fromCharCode(55357);
         const emojiObjects = {
             "happy": emojiCharLeft + String.fromCharCode(56898),
-            "flat": String.fromCharCode(55357) + String.fromCharCode(56848),
-            "unsure": String.fromCharCode(55357) + String.fromCharCode(56853),
-            "sad": String.fromCharCode(55357) + String.fromCharCode(56863),
-            "cheeky": String.fromCharCode(55357) + String.fromCharCode(56859),
-            "sadTear": String.fromCharCode(55357) + String.fromCharCode(56866),
-            "angry": String.fromCharCode(55357) + String.fromCharCode(56864)
+            "flat": emojiCharLeft + String.fromCharCode(56848),
+            "unsure": emojiCharLeft + String.fromCharCode(56853),
+            "sad": emojiCharLeft + String.fromCharCode(56863),
+            "cheeky": emojiCharLeft + String.fromCharCode(56859),
+            "sadTear": emojiCharLeft + String.fromCharCode(56866),
+            "angry": emojiCharLeft + String.fromCharCode(56864)
         };
         Object.keys(emojiObjects).forEach((key) => {
             emojiContainerElement.innerHTML += `<a id="${key}">${emojiObjects[key]}</a>`;
@@ -60,7 +60,8 @@ export class ChatMain {
         Object.keys(emojiObjects).forEach((key) => {
             document.querySelector(`#${key}`).addEventListener("click", (event) => {
                 const id = event.srcElement.id;
-                document.querySelector('#chatMessage').value += `${emojiObjects[id]}`;
+                this.userInputChatMessageElement.value += `${emojiObjects[id]}`;
+                this.userInputChatMessageElement.focus();
             });
         });
     }
