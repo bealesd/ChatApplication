@@ -27,9 +27,9 @@ export class ChatHelper {
         //if (!CoreHelper.hasProperiesOfStringOrNumberOnly(messageObject, messagesProperties)) return null;
 
         const messageDateTime = new Date(messageObject['datetime']);
-        return `<div data-id=${messageObject['id']} class="${messageObject['who'].toLowerCase()} messageNode">
+        return `<div data-id=${messageObject['Id']} class="${messageObject['Who'].toLowerCase()} messageNode">
                         <p class="dateTime">${messageDateTime.toUTCString()}</p>
-                        <p class="${messageObject['who'].toLowerCase()}Message">${messageObject['content']}</p>
+                        <p class="${messageObject['Who'].toLowerCase()}Message">${messageObject['Content']}</p>
                 </div>`;
     }
 
