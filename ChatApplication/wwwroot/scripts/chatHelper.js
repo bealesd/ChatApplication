@@ -26,10 +26,10 @@ export class ChatHelper {
         const messagesProperties = ['Id', 'Who', 'Datetime', 'Content'];
         //if (!CoreHelper.hasProperiesOfStringOrNumberOnly(messageObject, messagesProperties)) return null;
 
-        const messageDateTime = new Date(messageObject['Datetime']);
-        return `<div data-id=${messageObject['Id']} class="${messageObject['Who'].toLowerCase()} messageNode">
+        const messageDateTime = new Date(messageObject['datetime']);
+        return `<div data-id=${messageObject['id']} class="${messageObject['who'].toLowerCase()} messageNode">
                         <p class="dateTime">${messageDateTime.toUTCString()}</p>
-                        <p class="${messageObject['Who'].toLowerCase()}Message">${messageObject['Content']}</p>
+                        <p class="${messageObject['who'].toLowerCase()}Message">${messageObject['content']}</p>
                 </div>`;
     }
 
